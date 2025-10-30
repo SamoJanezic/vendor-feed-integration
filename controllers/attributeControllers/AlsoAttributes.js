@@ -171,7 +171,11 @@ class AlsoAttributes {
                 'Vrsta naprave': el => ({ Postavitev: el['#text'] }),
                 'Zmogljivost napajanja': el => ({ Moč: AlsoAttributes.replaceVat(el['#text']) }),
             },
-            // ... Add more categories and handlers as needed ...
+            'Miške': {
+                'Tehnologija povezljivosti': el => ({Povezava: el['#text']}),
+                'Tehnologija zaznavanja gibanja': el => ({Senzor: el['#text']}),
+                'Ločljivost premikanja': el => ({DPI: el['#text']}),
+            }
         };
 
         const handlers = attributeHandlers[this.category] || {};
