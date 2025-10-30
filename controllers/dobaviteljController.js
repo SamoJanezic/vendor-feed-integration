@@ -127,13 +127,6 @@ export default class DobaviteljController {
 	}
 
 	processLastnosti(data) {
-		// console.log(data)
-
-		// if (!data.dodatne_lastnosti?.length) {
-		// 	console.log(data.dodatne_lastnosti)
-		// 	return;
-		// }
-
 		let lastnosti = [
 			{
 				ean: data.ean,
@@ -279,11 +272,9 @@ export default class DobaviteljController {
 	}
 
 	async insertDataIntoDb() {
-		const { izdelekData, izdelekDobaviteljData, kategorijaData } =
-			this.prepareDbData();
+		const { izdelekData, izdelekDobaviteljData, kategorijaData } = this.prepareDbData();
 
-		// process.exit();
-
+        
 		db.sync();
 		await insertIntoTable(modelsMap.Dobavitelj, { dobavitelj: this.name });
 		await insertIntoTable(modelsMap.Izdelek, izdelekData);
