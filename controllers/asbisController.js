@@ -80,6 +80,7 @@ export class AsbisController extends DobaviteljController {
 			return true;
 		}
 		if (
+			!product.EAN ||
 			product.EAN.length < 5 ||
 			!product.AVAIL ||
 			product.AVAIL === "" ||

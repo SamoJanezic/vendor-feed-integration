@@ -32,8 +32,6 @@ export class AvteraController extends DobaviteljController {
 	ignoreCategorySet = new Set([
 		"Dodatki",
 		"Rezervni deli",
-		"Torbice in ovitki za tablice",
-		"Torbice",
 		"Kabli in adapterji",
 		"Vinske omarice",
 		"Električni skuterji",
@@ -53,6 +51,8 @@ export class AvteraController extends DobaviteljController {
 		"Zobne ščetke in prhe",
 		"Sprehajalne steze",
 		"Igralni pripomočki",
+		"Kalkulatorji",
+		"Potovalni kovčki"
 	]);
 
 	exceptions(param) {

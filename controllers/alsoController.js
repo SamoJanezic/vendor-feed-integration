@@ -72,6 +72,7 @@ export class AlsoController extends DobaviteljController {
 		"Komponente / Krmilniki / Drugi krmilniki",
 		"Omrežje & Smart Home / Mrežna oprema / Stikala - ohišja",
 		"Telefonija & Pametne naprave / Stacionarni telefoni / Fiksni telefon, IP & PBX",
+		"Garancije & storitve / Garancije & podpora / ZZ - Druga garancija & podpora",
 	]);
 
 	getNestedValue(obj, path) {

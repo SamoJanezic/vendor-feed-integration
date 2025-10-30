@@ -54,6 +54,9 @@ export class EventusController extends DobaviteljController {
 		if (this.ignoreCategorySet.has(param["kategorija"]["#text"])) {
 			return true;
 		}
+		if (!param["EAN"]) {
+			return true;
+		}
 	}
 
 	parseObject(obj) {

@@ -30,6 +30,10 @@ export class ElkotexController extends DobaviteljController {
 	];
 
 	ignoreCategorySet = new Set([
+		undefined,
+		"undefined",
+		"Pametne vtičnice",
+		"Pametne sijalke",
 		"Uncategorized",
 		"Oprema za kopalnice",
 		"Medicinski pripomočki",
@@ -91,6 +95,8 @@ export class ElkotexController extends DobaviteljController {
 		"Kuhinjski organizatorji",
 		"Kuhinjski pripomočki",
 		"Priprava hrane",
+		"Senzorji",
+		"Zvočne kartice",
 	]);
 
 	exceptions(param) {
