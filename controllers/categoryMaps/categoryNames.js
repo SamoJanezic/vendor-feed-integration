@@ -75,7 +75,7 @@ const categoryNames = Object.freeze({
 	// BELA TEHNIKA
 	PRALNI: "Pralni stroji",
 	SUSILNI: "Sušilni stroji",
-	PRALNO_SUŠILNI: "Pralno sušilni stroji",
+	PRALNO_SUŠILNI: "Pralno-sušilni stroji",
 	POMIVALNI: "Pomivalni stroji",
 	HLADILNIK: "Hladilniki",
 	ZAMRZOVALNIK: "Zamrzovalniki",

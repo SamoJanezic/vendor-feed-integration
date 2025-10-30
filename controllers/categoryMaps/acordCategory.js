@@ -3,7 +3,7 @@ import cn from "./categoryNames.js";
 const acordCategoryMap = {
 	[cn.AUDIO_VIDEO]: ["Avdio/Video"],
 	[cn.POWERLINE]: ["Vtičnice"],
-	[cn.LAN_CARD_EXTENDERS]: ["Mrežne kartice in adapterji", "WiFi ojačevalci - extender", "Antene"],
+	[cn.LAN_CARD_EXTENDERS]: ["Mrežne kartice in adapterji", "WiFi ojačevalci - extender", "Antene", "Mrežna oprema"],
 	[cn.ROUTER_SWITCH_AP]: ["Centralne enote", "Stikala - switch", "Usmerjevalniki - router", "Dostopne točke - AP"],
 	[cn.HDD]: ["Razširitvene kartice", "Trdi diski in SSD", "Zunanja ohišja za diske", "Zunanji trdi diski in SSD"],
 	[cn.SOFTWARE]: ["Pisarniški programi", "Operacijski sistemi", "Druga programska oprema"],

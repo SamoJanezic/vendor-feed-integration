@@ -13,6 +13,7 @@ const elkotexCategoryMap = {
 	[cn.PRINTER]: ["Laserski tiskalniki"],
 	[cn.EXT_MEDIA]: ["Bluetooth", "USB hubi in priklopne postaje", "Centralne nadzorne enote (HUB)", "MP3/MP4 predvajalniki"],
 	[cn.LAN_CARD_EXTENDERS]: [
+		"Mrežna oprema",
 		"Ojačevalniki brezžičnega omrežja",
 		"PoE",
 		"Mrežne kartice",
@@ -26,6 +27,7 @@ const elkotexCategoryMap = {
 		"Parni čistilniki",
 		"Robotski sesalniki",
 	],
+	[cn.KONF_OPREMA]: ["Konferenčni sistemi"],
 	[cn.HIFI]: ["Prenosni zvočniki"],
 	[cn.P_DOM]: [
 		"Domofoni",
@@ -50,19 +52,12 @@ const elkotexCategoryMap = {
 		"Hlajenje za prenosnike",
 		"Dodatki za tablične računalnike",
 	],
-	[cn.RADIATOR]: ["Oljni radiatorji", "Konvekcijski radiatorji"],
 	[cn.SLUSALKE]: [
 		"Slušalke in mikrofoni",
 		"Naglavne slušalke",
 		"True Wireless slušalke",
 		"In-Ear slušalke",
 	],
-	// "Mali gospodinjski aparati": [
-	// 	"Kuhinjsko orodje",
-	// 	"Kuhinjski organizatorji",
-	// 	"Kuhinjski pripomočki",
-	// 	"Priprava hrane",
-	// ],
 	[cn.SOUND_BAR]: ["Zvočni sistemi za domači kino", "Medijski predvajalniki"],
 	[cn.TABLET]: [
 		"Tablični računalniki in e-Bralniki",
@@ -80,11 +75,14 @@ const elkotexCategoryMap = {
 		"Električni skiroji",
 		"Vse za kolo",
 	],
-	[cn.GRETJE]: [
+	[cn.RADIATOR]: [
 		"IR grelniki",
 		"Kaloriferji, stenski grelniki",
 		"Kamini",
 		"Solarni paneli",
+		"Oljni radiatorji",
+		"Konvekcijski radiatorji",
+		"Ogrevanje"
 	],
 	[cn.HLAJENJE]: ["Hladilci zraka"],
 	[cn.SOFTWARE]: ["Microsoft Windows", "Microsoft Office"],
@@ -99,7 +97,7 @@ const elkotexCategoryMap = {
 		"Čitalniki kartic in zaščitne škatlice",
 	],
 	[cn.RAM]: ["Pomnilniški moduli"],
-	[cn.PEKA_KRUH]: ["Opekači kruha, toasterji"],
+	[cn.TOASTER]: ["Opekači kruha, toasterji"],
 	[cn.LEDOMAT]: ["Priprava sladoleda in ledomati"],
 	[cn.TEHTNICA]: ["Kuhinjske tehtnice"],
 	[cn.MESO_SALAMOREZNICA]: ["Salamoreznice/mletje mesa"],
@@ -108,7 +106,7 @@ const elkotexCategoryMap = {
 	[cn.K_ZAR]: ["Električne pečice, žari in grelne ploskve"],
 	[cn.DOM_VRT]: [
 		"Koši za perilo",
-		"Poštni nabiralniki"
+		"Poštni nabiralniki",
 		"Robotske kosilnice",
 		"Stojala za perilo in obešalniki",
 		"Vrtno orodje",
@@ -133,6 +131,7 @@ const elkotexCategoryMap = {
 		"Kamp kuhinjski pripomočki",
 	],
 	[cn.UPS]: ["Brezprekinitvena napajanja"],
+	[cn.Z_RAZVLAZILEC]: ["Razvlaževalci"],
 };
 
 export default elkotexCategoryMap;

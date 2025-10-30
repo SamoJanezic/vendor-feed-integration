@@ -9,20 +9,20 @@ const eventusCategoryMap = {
 	[cn.SD_CARD]: ["Ključki, kartice, čitalci", "Spominske kartice"],
 	[cn.SOFTWARE]: ["Antivirus"],
 	[cn.HDD]: ["Dodatki za SSD/HDD", "Diski SSD"],
-	[cn.TABLET]: ["E-bralniki", "Oprema za tablice"],
+	[cn.TABLET]: ["E-bralniki", "Oprema za tablice", "Grafične tablice in dodatki", "Grafični zasloni", "Grafične tablice"],
 	[cn.OHISJE]: ["Računalniška ohišja"],
 	[cn.M_PODLOGE]: ["Podloge za miške"],
 	[cn.TV_MOUNT]: ["Stojala in nosilci"],
 	[cn.SLUSALKE]: ["Slušalke in mikrofoni"],
-	[cn.CRYPTO]: ["Bitcoin in kripto varnost"],
+	[cn.CRYPTO]: ["Bitcoin in kripto varnost", "Varnostni ključi"],
 	[cn.EXT_MEDIA]: ["USB hubi", "Adapterji in USB naprave", "Priključne postaje"],
 	[cn.RAM]: ["RAM pomnilniki"],
-	[cn.IGRE]: ["Gaming in streaming"],
+	[cn.GAMEPAD]: ["Gaming in streaming"],
 	[cn.KOLO]: ["Kolesarski računalniki", "Kolesarstvo", "Kolesarske luči"],
 	[cn.COOLER]: ["Ventilatorji in AIO hladilniki", "Ohišja in hlajenje", "Termalne paste in blazinice"],
 	[cn.HIFI]: ["Gramofoni"],
 	[cn.UPS]: ["UPS naprave", "Prenapetostna zaščita"],
-	[cn.POS]: ["Grafične tablice in dodatki", "Grafični zasloni"]
+	[cn.ROUTER_SWITCH_AP]: ["Mrežna opema"]
 };
 
 

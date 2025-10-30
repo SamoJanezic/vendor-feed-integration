@@ -34,7 +34,7 @@ const bshCategoryMap = {
 	[cn.MULTIPRAKTIK]: ["Stroj za obdelavo hrane"],
 	[cn.SUSILNI]: ["Sušilni stroj"],
 	[cn.ZAMRZOVALNIK]: ["Zamrzovalnik"],
-	[cn.ZAR]: ["Žar"],
+	[cn.K_ZAR]: ["Žar"],
 };
 
 export default bshCategoryMap;

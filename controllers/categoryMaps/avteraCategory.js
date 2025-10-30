@@ -13,18 +13,20 @@ const avteraCategoryMap = {
 	],
 	[cn.POTROSNI_M]: ["Bobni"],
 	[cn.FOTOAPARAT]: ["Dodatki Foto/Video", "Digitalni fotoaparati"],
-	[cn.PRINTER]: ["'Dodatki za tiskalnike", "Multifunkcijske naprave"],
+	[cn.PRINTER]: ["'Dodatki za tiskalnike", "Multifunkcijske naprave", "Kopirni stroji"],
 	[cn.POS]: ["POS sistemi", "Dodatki za kopirne stroje"],
 	[cn.LAPTOP_DODATKI]: [
+		"Torbice in ovitki za tablice",
+		"Torbice",
 		"Dodatki za računalnike",
 		"Torbice in ovitki za tablice",
 		"Dodatki za tablice",
 	],
+	[cn.SESALEC]: ["Sesalci"],
 	[cn.SCANNER]: ["Čitalniki"],
 	[cn.SERVER]: ["Tiskalniški strežniki"],
 	[cn.ROM_DRIVE]: ["Optični pogoni"],
 	[cn.HDD]: ["SSD"],
-	[cn.AUDIO_VIDEO]: ["Avdio"],
 	[cn.SOFTWARE]: [
 		"DSP programska oprema",
 		"FPP za podjetja in domačo up.",
@@ -63,7 +65,10 @@ const avteraCategoryMap = {
 	[cn.CELADA]: ["Mestne čelade"],
 	[cn.URE]: ["Nosljive naprave"],
 	[cn.RADIATOR]: ["Električna ogrevala"],
-	[cn.KEY]: ["Varnostni ključi"]
+	[cn.KEY]: ["Varnostni ključi"],
+	[cn.PRALNO_SUŠILNI]: ["Pralno-sušilni stroji"],
+	[cn.KLIMA]: ["Klimatske naprave"],
+	[cn.RADIO]: ["Avdio"],
 };
 
 export default avteraCategoryMap;

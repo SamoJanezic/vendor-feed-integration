@@ -12,6 +12,7 @@ const gorenjeCategoryMap = {
 		"Štirivratni hladilnik",
 		"Vinska vitrina"
 	],
+	[cn.TOPLOTNA_C]: ["Toplotna črpalka"],
 	[cn.ZAMRZOVALNIK]: ["Zamrzovalna omara", "Zamrzovalna skrinja"],
 	[cn.KLIMA]: ["Klimatska naprava"],
 	[cn.PRALNI]: ["Pralni stroj"],
@@ -33,8 +34,7 @@ const gorenjeCategoryMap = {
 	[cn.SOK_OŽEM]: ["Ožemalnik", "Sokovnik"],
 	[cn.TEHTNICA]: ["Kuhinjska namizna tehtnica", "Osebna tehnica"],
 	[cn.MESALNIK]: ["Nastavni mešalnik", "Mešalnik", "Palični mešalnik", "Smoothie Maker", "Sekljalnik"],
-	[cn.ZAR]: ["Kontaktni žar"],
-	[cn.K_ZAR]: ["Namizni žar"],
+	[cn.K_ZAR]: ["Kontaktni žar", "Namizni žar"],
 	[cn.K_ROBOT]: ["Kuhinjski robot"],
 	[cn.K_PLOSCA]: ["Kuhališče", "Indukcijsko kuhališče", "Indukcijska kuhalna plošča z napo"],
 	[cn.RADIATOR]: ["Radiator"],
