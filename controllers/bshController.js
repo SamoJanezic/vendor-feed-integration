@@ -6,7 +6,7 @@ export class BshController extends DobaviteljController {
 		super(...args);
 		this.categoryMap = categoryMap
 	}
-	name = "BSH";
+	name = "bosch";
 	file = [
 		{
 			fileName: "BSH_opisi.xml",

@@ -7,7 +7,7 @@ export class LiebherrController extends dobaviteljController {
 		this.categoryMap = categoryMap;
 		this.Attributes = Attributes;
 	}
-	name = "Liebherr";
+	name = "liebherr";
 	nodes = "Export.LeaveNode.LeaveNode";
 	file = "liebherr.xml";
 	encoding = "utf8";
@@ -56,9 +56,6 @@ export class LiebherrController extends dobaviteljController {
 
 		if (!price && !promoPrice) return;
 
-		// console.log(attributes)
-		// process.exit()
-
 		const defaults = {
 			dealer_cena: null,
 			davcna_stopnja: 22,
@@ -74,15 +71,15 @@ export class LiebherrController extends dobaviteljController {
 				promoPrice?.["opis izdelka"] ?? price?.["Opis aparata"],
 			opis: promoPrice?.["opis izdelka"] ?? price?.["Opis aparata"],
 			cena_nabavna:
-				promoPrice?.[
+				(promoPrice?.[
 					"Promocijska priporočena maloprodajna cena brez DDV"
-				] ?? price?.["Priporočena maloprodajna cena brez DDV"],
+				] ?? price?.["Priporočena maloprodajna cena brez DDV"]).toFixed(2),
 			ppc:
-				promoPrice?.[
+				(promoPrice?.[
 					"Promocijska priporočena maloprodajna cena z DDV"
-				] ?? price?.["Priporočena maloprodajna cena z DDV"],
+				] ?? price?.["Priporočena maloprodajna cena z DDV"]).toFixed(2),
 			slika_mala: images[0],
-			slika_velika: images[0],
+			slika_velika: images[1] || images[0],
 			dodatne_slike: images,
 			dodatne_lastnosti: attributes,
 			kategorija: prod["@_type"],
@@ -227,7 +224,6 @@ export class LiebherrController extends dobaviteljController {
 				}
 			}
 		}
-
 		return result;
 	}
 
