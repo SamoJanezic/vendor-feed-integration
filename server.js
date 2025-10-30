@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 	res.setHeader(
 		"Access-Control-Allow-Headers",
-		"Origin, X-Requested-With, Content-Type, Accept, id, table, limit, offset"
+		"Origin, X-Requested-With, Content-Type, Accept, id, table, limit, offset, kategorija, dobavitelj"
 	);
 	res.setHeader(
 		"Content-Security-Policy",
