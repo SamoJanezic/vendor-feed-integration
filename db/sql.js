@@ -156,3 +156,18 @@ export async function upsertTable(tableName, allData) {
         }
     }
 }
+
+export async function updateKategorija(marza, id) {
+    try {
+        const [affectedRows] = await Kategorija.update(
+            { marza },
+            {
+                where: { kategorija_id: id }
+            }
+        );
+        return affectedRows;
+    } catch (error) {
+        console.error("Error updating Kategorija:", error);
+        throw error;
+    }
+}
