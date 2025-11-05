@@ -1,6 +1,6 @@
 import DobaviteljController from "./DobaviteljController.js";
 
-export class ElkotexController extends DobaviteljController {
+export default class ElkotexController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;

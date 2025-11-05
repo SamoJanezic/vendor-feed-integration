@@ -1,6 +1,6 @@
 import DobaviteljController from "./DobaviteljController.js";
 
-export class AlsoController extends DobaviteljController {
+export default class AlsoController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;

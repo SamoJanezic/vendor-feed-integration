@@ -1,6 +1,6 @@
 import DobaviteljController from "./DobaviteljController.js";
 
-export class AsbisController extends DobaviteljController {
+export default class AsbisController extends DobaviteljController {
 	constructor(categoryMap, attribute, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;

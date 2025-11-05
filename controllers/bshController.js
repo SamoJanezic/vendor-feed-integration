@@ -1,7 +1,7 @@
 import { xmlParser } from "./parseController.js";
 import DobaviteljController from "./DobaviteljController.js";
 
-export class BshController extends DobaviteljController {
+export default class BshController extends DobaviteljController {
 	constructor(categoryMap, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap

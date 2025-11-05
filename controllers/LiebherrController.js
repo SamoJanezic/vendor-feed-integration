@@ -1,7 +1,7 @@
 import dobaviteljController from "./DobaviteljController.js";
 import { excelParser } from "./parseController.js";
 
-export class LiebherrController extends dobaviteljController {
+export default class LiebherrController extends dobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;
@@ -32,14 +32,6 @@ export class LiebherrController extends dobaviteljController {
 		flatData.forEach((product) => {
 			this.keyRules(product, prices, promoPrices);
 		});
-
-		// const matches = this.allData.flatMap(item1 =>
-		// records
-		// 	.filter(item2 => String(item1.ean) === String(item2['Matični podatki//EAN-št']))
-		// 	.map(item2 => ({...item1, ...item2}))
-		// );
-
-		// console.log(matches);
 	}
 
 	keyRules(prod, prices, promoPrices) {

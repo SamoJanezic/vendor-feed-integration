@@ -1,6 +1,6 @@
 import DobaviteljController from "./DobaviteljController.js";
 
-export class ColbyController extends DobaviteljController {
+export default class ColbyController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;

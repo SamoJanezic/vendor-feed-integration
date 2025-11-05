@@ -1,6 +1,6 @@
 import DobaviteljController from "./DobaviteljController.js";
 
-export class AvteraController extends DobaviteljController {
+export default class AvteraController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;

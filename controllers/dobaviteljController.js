@@ -40,11 +40,20 @@ export default class DobaviteljController {
 	getData() {
 		if (typeof this.file === "object") {
 			return this.file.map((el) => {
-				return xmlParser(el.fileName, el.node);
+				if (!el?.fileName || !el?.node) {
+                    console.warn("Skipping invalid file entry:", el);
+                    return null;
+                }
+                return xmlParser(el.fileName, el.node);
 			});
 		}
-		const data = xmlParser(this.file, this.nodes, this.encoding);
-		return data;
+		try {
+            const data = xmlParser(this.file, this.nodes, this.encoding);
+            return data;
+        } catch (err) {
+            console.error("Error parsing XML file:", err.message);
+            return null;
+        }
 	}
 
 	createDataObject() {

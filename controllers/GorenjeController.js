@@ -1,7 +1,7 @@
 import { xmlParser } from "./parseController.js";
 import DobaviteljController from "./DobaviteljController.js";
 
-export class GorenjeController extends DobaviteljController {
+export default class GorenjeController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;
