@@ -244,6 +244,7 @@ export default class DobaviteljController {
 	}
 
 	prepareDbData() {
+        // process.exit();
 		const izdelekData = this.allData.map((el) => {
 			return {
 				ean: el.ean,
@@ -283,11 +284,9 @@ export default class DobaviteljController {
 	async insertDataIntoDb() {
 		const { izdelekData, izdelekDobaviteljData, kategorijaData } = this.prepareDbData();
 
-        
 		db.sync();
 		await insertIntoTable(modelsMap.Dobavitelj, { dobavitelj: this.name });
 		await insertIntoTable(modelsMap.Izdelek, izdelekData);
-		await insertIntoTable(modelsMap.Kategorija, kategorijaData);
 		await insertIntoTable(
 			modelsMap.IzdelekDobavitelj,
 			izdelekDobaviteljData

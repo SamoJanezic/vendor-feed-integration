@@ -29,6 +29,7 @@ export default class AcordController extends DobaviteljController {
 	];
 
 	ignoreCategorySet = new Set([
+        "Športni dodatki",
 		"Kolutni podaljški",
 		"Žarnice",
 		"Zunanja svetila",

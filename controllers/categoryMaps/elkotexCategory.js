@@ -10,6 +10,7 @@ const elkotexCategoryMap = {
 		"Uničevalci dokumentov",
 		"Organizatorji in dodatki",
 	],
+    [cn.MONITOR]: ["Nosilci za monitorje"],
 	[cn.PRINTER]: ["Laserski tiskalniki"],
 	[cn.EXT_MEDIA]: ["Bluetooth", "USB hubi in priklopne postaje", "Centralne nadzorne enote (HUB)", "MP3/MP4 predvajalniki"],
 	[cn.LAN_CARD_EXTENDERS]: [
@@ -44,7 +45,7 @@ const elkotexCategoryMap = {
 		"Stikala",
 		"Usmerjevalniki",
 	],
-	[cn.VENTILATOR]: ["Ventilatorji in dodatki"],
+	[cn.VENTILATOR]: ["Hladilci zraka"],
 	[cn.MINI_PC]: ["Mini-micro-barebone (NUC)"],
 	[cn.LAPTOP_DODATKI]: [
 		"Torbe za prenosnike",
@@ -84,11 +85,10 @@ const elkotexCategoryMap = {
 		"Konvekcijski radiatorji",
 		"Ogrevanje"
 	],
-	[cn.HLAJENJE]: ["Hladilci zraka"],
 	[cn.SOFTWARE]: ["Microsoft Windows", "Microsoft Office"],
 	[cn.POWERLINE]: ["Home Plug PowerLine"],
 	[cn.NAS]: ["NAS naprave", "NAS dodatki"],
-	[cn.HLAJENJE]: ["Hladilniki za procesorje", "Termalne paste"],
+	[cn.COOLER]: ["Hladilniki za procesorje", "Termalne paste", "Ventilatorji in dodatki"],
 	[cn.KAVA_CAJ]: ["Mlinčki za kavo", "Kavni aparati"],
 	[cn.HDD]: ["Zunanji diski", "Zunanji SSD diski", "SSD diski"],
 	[cn.POTROSNI_M]: ["Tonerji in črnila", "Papir"],
@@ -96,6 +96,7 @@ const elkotexCategoryMap = {
 		"Spominske kartice",
 		"Čitalniki kartic in zaščitne škatlice",
 	],
+    [cn.KOMPLET]: ["Miške in tipkovnice"],
 	[cn.RAM]: ["Pomnilniški moduli"],
 	[cn.TOASTER]: ["Opekači kruha, toasterji"],
 	[cn.LEDOMAT]: ["Priprava sladoleda in ledomati"],

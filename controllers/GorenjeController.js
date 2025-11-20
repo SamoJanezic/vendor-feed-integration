@@ -54,11 +54,16 @@ export default class GorenjeController extends DobaviteljController {
 
 	createDataObject() {
 		const data = xmlParser(this.file, this.nodes, this.encoding);
-
-		data.forEach(el => this.getSingleData(el))
+        const dataFeatures = xmlParser(this.file,'mabagor.features.feature' , this.encoding)
+        // console.log(features)
+		data.forEach(el => this.getSingleData(el, dataFeatures))
 	}
 
-	getSingleData(data) {
+	getSingleData(data, features) {
+        let opis;
+        if(data?.product_content?.features?.feature) {
+            opis = this.createOpis(data.product_content.features.feature, features);
+        }
 		const images = data?.product_assets?.images?.image;
 		const imageArray = Array.isArray(images) ? images : images ? [images] : null;
 		const brandAndCategory = data?.product_category_hierarchy?.child_category;
@@ -72,8 +77,8 @@ export default class GorenjeController extends DobaviteljController {
 			ean: data?.product_content?.basic_information?.product_eans?.ean,
 			izdelek_ime: data?.product_content?.basic_information?.product_titles?.title,
 			kratki_opis: data?.product_content?.basic_information?.product_descriptions?.short_description,
-			opis: data?.product_content?.basic_information?.product_descriptions?.long_description,
-			cena_nabavna: data?.product_content?.basic_information?.product_prices?.msrp,
+			opis: opis,
+			cena_nabavna: null, //data?.product_content?.basic_information?.product_prices?.msrp,
 			dealer_cena: null,
 			ppc: data?.product_content?.basic_information?.product_prices?.msdp ?? null,
 			davcna_stopnja: '22',
@@ -91,6 +96,23 @@ export default class GorenjeController extends DobaviteljController {
 		}
 		this.allData.push(singleObject);
 	}
+
+    createOpis(productFeatures, allFeatures) {
+        // console.log(productFeatures)
+        const featuresArray = Array.isArray(productFeatures)
+            ? productFeatures
+            : productFeatures
+            ? [productFeatures]
+            : [];
+        const idSet = new Set(featuresArray.map(el => el['@_id']))
+        const matchedFeatures = allFeatures.filter(feat => idSet.has(feat['@_id']));
+        const productDescription = matchedFeatures.map(f => {
+            const subtitle = f.subtitle?.trim() || '';
+            const longdesc = f.longdesc?.trim() || '';
+            return `<h3>${subtitle}</h3>\n<p>${longdesc}</p>`;
+        }).join('\n');
+        return productDescription;
+    }
 
 	executeAll() {
 		this.createDataObject();

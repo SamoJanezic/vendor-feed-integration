@@ -33,6 +33,9 @@ export default class AsbisController extends DobaviteljController {
 
 	exceptions(product) {
 		const ignoreCategory = [
+            "Mobilna telefonija",
+            "Medijski predvajalniki",
+            "VC Headsets",
 			"Various Accessories",
 			"Wireless Charger",
 			"Power Battery Charger",

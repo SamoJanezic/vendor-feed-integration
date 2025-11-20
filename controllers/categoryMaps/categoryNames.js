@@ -22,7 +22,7 @@ const categoryNames = Object.freeze({
 	COOLER: "Hlajenje",
 	// MREŽNA OPREMA
 	ROUTER_SWITCH_AP: "Usmerjevalniki, stikala in AP",
-	LAN_CARD_EXTENDERS: "Mrežne kartice, antene WIFI ojačevalci",
+	LAN_CARD_EXTENDERS: "Mrežne kartice, Antene, WIFI Ojačevalci",
 	POWERLINE: "Powerline",
 	// TISKANJE IN OPTIČNO BRANJE
 	PRINTER: "Tiskalniki",
@@ -75,7 +75,7 @@ const categoryNames = Object.freeze({
 	// BELA TEHNIKA
 	PRALNI: "Pralni stroji",
 	SUSILNI: "Sušilni stroji",
-	PRALNO_SUŠILNI: "Pralno-sušilni stroji",
+	PRALNO_SUŠILNI: "Pralno Sušilni Stroji",
 	POMIVALNI: "Pomivalni stroji",
 	HLADILNIK: "Hladilniki",
 	ZAMRZOVALNIK: "Zamrzovalniki",
@@ -125,7 +125,7 @@ const categoryNames = Object.freeze({
 	N_BRIVNIK: "Brivniki",
 	N_REZNIK: "Strižniki",
 	N_LAS: "Nega las",
-	N_DEPILATOR: "Depilatorji in epilatorji",
+	N_DEPILATOR: "Depilatorji In Epilatorji",
 	N_USTNA: "Ustna nega",
 	N_ACC: "Pripomočki za ustno nego",
 	// ŠPORT IN PROSTI ČAS

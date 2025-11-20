@@ -23,7 +23,7 @@ const colbyCategoryMap = {
         [cn.DRON]: ["Droni"],
         [cn.SLUSALKE]: ["Stojala za slušalke"],
         [cn.STOL]: ["Dodatki za gaming stole"],
-        [cn.N_LAS]: ["Sušilnik za lase", "Likalnik za lase", "kodralnik", "Krtača za lase"]
+        [cn.N_LAS]: ["Sušilnik za lase", "Likalnik za lase", "kodralnik", "Kodralnik", "Krtača za lase"]
     };
 
 export default colbyCategoryMap;

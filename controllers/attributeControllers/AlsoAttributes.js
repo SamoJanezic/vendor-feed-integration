@@ -32,6 +32,10 @@ class AlsoAttributes {
 
         const attributes = {};
 
+        // if(this.category === 'Prenosniki') {
+        //     console.log(this.attribute);
+        // }
+
         const attributeHandlers = {
             Prenosniki: {
                 Procesor: el => ({ Procesor: el['#text'] }),

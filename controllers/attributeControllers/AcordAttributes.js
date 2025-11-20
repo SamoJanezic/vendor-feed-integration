@@ -31,11 +31,10 @@ class AcordAttributes {
         if (!this.attribute || !this.attribute.length) return null;
         const attributes = {};
 
-        // Centralized attribute handlers per category
         const attributeHandlers = {
             Prenosniki: {
                 procesor: el => ({ Procesor: el['#text'] }),
-                pomnilnik: el => ({ "Kapaciteta pomnilnika": AcordAttributes.extractCapacity(el['#text']) }),
+                pomnilnik_filter: el => ({ "Kapaciteta pomnilnika": el['#text'] }),
                 zaslon: el => ({
                     "Velikost zaslona": AcordAttributes.extractScreenSize(el['#text']),
                     "Ločljivost": AcordAttributes.extractResolution(el['#text'])
@@ -45,14 +44,14 @@ class AcordAttributes {
                 operacijski_sistem_filter: el => ({ "Operacijski sistem": el['#text'] }),
                 operacijski_sistem: el => ({ "Operacijski sistem": el['#text'] }),
             },
-            'All in one': {
-                procesor: el => ({ Procesor: el['#text'] }),
-                pomnilnik: el => ({ "Kapaciteta pomnilnika": AcordAttributes.extractCapacity(el['#text']) }),
+            'All in One': {
+                tip_procesorja: el => ({ Procesor: el['#text'] }),
+                pomnilnik_filter: el => ({ "Kapaciteta pomnilnika": AcordAttributes.extractCapacity(el['#text']) }),
                 zaslon: el => ({
                     "Velikost zaslona": AcordAttributes.extractScreenSize(el['#text']),
                     "Ločljivost": AcordAttributes.extractResolution(el['#text'])
                 }),
-                trdi_disk: el => ({ "Kapaciteta diska": AcordAttributes.extractCapacity(el['#text']) }),
+                ssd_filter: el => ({ "Kapaciteta diska": AcordAttributes.extractCapacity(el['#text']) }),
                 graficna_kartica: el => ({ "Grafična kartica": el['#text'] }),
                 operacijski_sistem: el => ({ "Operacijski sistem": el['#text'] }),
             },
@@ -222,13 +221,24 @@ class AcordAttributes {
 
         const handlers = attributeHandlers[this.category] || {};
 
-		this.attribute.forEach(el => {
-            const id = el['@_id'];
-            const handler = handlers[id];
-            const result = handler ? handler(el) : AcordAttributes.defaultHandler(el);
-            Object.assign(attributes, result);
-        });
+this.attribute.forEach(el => {
+    const id = el['@_id'];
+    const handler = handlers[id];
 
+    if (handler) {
+        // Run custom handler, always wins
+        const result = handler(el);
+        Object.assign(attributes, result);
+    } else {
+        // Normalize key for existence check
+        const defaultKey = el['@_naziv'].replace(/[:\s]+$/, '').trim();
+        if (!(defaultKey in attributes)) {
+            // Default handler writes normalized key
+            const result = { [defaultKey]: el['#text'] };
+            Object.assign(attributes, result);
+        }
+    }
+});
         return attributes;
     }
 }

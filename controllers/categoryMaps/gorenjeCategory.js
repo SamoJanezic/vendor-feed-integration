@@ -20,7 +20,7 @@ const gorenjeCategoryMap = {
 	[cn.POMIVALNI]: ["Pomivalni stroj"],
 	[cn.SUSILNI]: ["Sušilnik perila"],
 	[cn.POSODA]: ["Posoda za meso", "Posoda za začimbe"],
-	[cn.GRELNIK_V]: ["Grelnik vode"],
+	[cn.BOJLER]: ["Grelnik vode"],
 	[cn.PEKA_KRUH]: ["Aparati za peko kruha", "Aparat za peko kruha"],
 	[cn.VAKUUM]: ["Vakuumski varilec folije", "Vrečke ali folije za vakuumski varilec", "Vakuumski aparati", "Strojček za vakuumsko pakiranje", "Pečica z mikrovalovi in paro"],
 	[cn.MESO_SALAMOREZNICA]: ["Rezalnik", "Aparat za mletje mesa", "Sekljalnik"],

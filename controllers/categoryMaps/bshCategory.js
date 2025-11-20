@@ -23,7 +23,7 @@ const bshCategoryMap = {
 	[cn.MIKROVALOVNA]: ["Mikrovalovna pečica"],
 	[cn.MESO_SALAMOREZNICA]: ["Mlinček za meso", "Rezalnik"],
 	[cn.K_NAPA]: ["Napa"],
-	[cn.PEKA_KRUH]: ["Opekač"],
+	[cn.TOASTER]: ["Opekač"],
 	[cn.POMIVALNI]: ["Pomivalni stroj"],
 	[cn.PRALNI]: ["Pralni stroj"],
 	[cn.SESALEC]: [

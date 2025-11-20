@@ -69,6 +69,7 @@ const avteraCategoryMap = {
 	[cn.PRALNO_SUŠILNI]: ["Pralno-sušilni stroji"],
 	[cn.KLIMA]: ["Klimatske naprave"],
 	[cn.RADIO]: ["Avdio"],
+    [cn.N_ACC]: ["Masažni aparati", "Zobne ščetke, prhe, brivniki in sušilci"],
 };
 
 export default avteraCategoryMap;
