@@ -70,7 +70,7 @@ function getCurrentTimestamp() {
 
 
 export async function build() {
-  const file = `xml/softtrade.xml`;
+  const file = `xml/build/softtrade.xml`;
 
   const head = `<?xml version="1.0" encoding="UTF-8"?>
 <podjetje id="Softtrade, Ljutomer" ts="${getCurrentTimestamp()}" opis_storitve="https://www.pcplus.si/catalog-export/">
