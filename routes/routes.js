@@ -105,21 +105,12 @@ router.put("/update_kategorija", (req, res) => {
 	res.status(200).json({ message: "Marže kategorij posodobljene." });
 });
 
-router.put("/update_izdelek", (req, res) => {
+router.put("/update", (req, res) => {
 	const data = req.body;
+    console.log(data)
 
 	modelsMap.IzdelekDobavitelj.update(
-		{
-			KATEGORIJA_kategorija: data.KATEGORIJA_kategorija,
-			izdelek_ime: data.izdelek_ime,
-			izdelek_opis: data.izdelek_opis,
-			izdelek_kratki_opis: data.izdelek_kratki_opis,
-			dealer_cena: data.dealer_cena,
-			nabavna_cena: data.nabavna_cena,
-			ppc: data.ppc,
-			zaloga: data.zaloga,
-			aktiven: data.aktiven,
-		},
+        data.newData,
 		{
 			where: {
 				id: data.id,
