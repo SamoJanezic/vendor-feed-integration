@@ -1,102 +1,132 @@
 import fsp from "fs/promises";
+import { XMLBuilder } from "fast-xml-parser";
 import { getIzdelekInfo, getAtributInfo, getSlikaInfo } from "../db/sql.js";
 
-async function createBody(el) {
-  const izdelekId = `softT${el.id}`;
-  const atributInfo = await getAtributInfo(el.ean);
-  const slike = await getSlikaInfo(el.ean);
-
-  const dodatneLastnosti = atributInfo[0]
-    .map(attr =>
-      `        <lastnost naziv="${attr.komponenta.replace('"', '')}" id="${attr.komponenta_id}"><![CDATA[${attr.atribut}]]></lastnost>`
-    )
-    .join("\r\n");
-
-  let count = 1;
-  const dodatneSlike = slike
-    .filter(img => img.tip === "dodatna")
-    .map(img => `        <dodatnaSlika${count++}><![CDATA[${img.slika_url}]]></dodatnaSlika${count - 1}>`)
-    .join("\r\n");
-
-  const slikaMala = slike.find(s => s.tip === "mala")?.slika_url || "";
-  const slikaVelika = slike.find(s => s.tip === "velika")?.slika_url || "";
-
-  return `  <izdelek id="${el.id}">
-      <izdelekID>${izdelekId}</izdelekID>
-      <EAN>${el.ean}</EAN>
-      <izdelekIme><![CDATA[${el.izdelek_ime}]]></izdelekIme>
-      <url/>
-      <opis><![CDATA[${el.izdelek_opis}]]></opis>
-      <PPC>${el.ppc}</PPC>
-      <cenaAkcijska></cenaAkcijska>
-      <nabavnaCena>${el.nabavna_cena}</nabavnaCena>
-      <DC>${el.dealer_cena}</DC>
-      <DRabat>0</DRabat>
-      <blagovnaZnamka id="${el.blagovna_znamka}"><![CDATA[${el.blagovna_znamka}]]></blagovnaZnamka>
-      <dimenzijePaketa kratekZapisVCm="xx">
-        <depth unitOfMeasure="MM">/</depth>
-        <height unitOfMeasure="MM">/</height>
-        <width unitOfMeasure="MM">/</width>
-        <grossWeight unitOfMeasure="KG">/</grossWeight>
-        <netWeight unitOfMeasure="KG">/</netWeight>
-      </dimenzijePaketa>
-      <davcnaStopnja>${el.davcna_stopnja}</davcnaStopnja>
-      <kategorija id="${el.kategorija_id}">${el.kategorija}</kategorija>
-      <slikaMala><![CDATA[${slikaMala}]]></slikaMala>
-      <slikaVelika><![CDATA[${slikaVelika}]]></slikaVelika>
-      <dobava id="${el.zaloga === "Na zalogi" ? 1 : 0}">${el.zaloga}</dobava>
-      <spletnaStranProizvajalca></spletnaStranProizvajalca>
-      <dodatneLastnosti>
-${dodatneLastnosti}
-      </dodatneLastnosti>
-      <dodatneSlike>
-${dodatneSlike}
-      </dodatneSlike>
-    </izdelek>
-  `;
-}
+// Configure XML builder
+const parser = new XMLBuilder({
+	ignoreAttributes: false,
+	format: true,
+	cdataPropName: "cdata",
+});
 
 function getCurrentTimestamp() {
-    const now = new Date();
-    const pad = n => n.toString().padStart(2, '0');
-    const dd = pad(now.getDate());
-    const mm = pad(now.getMonth() + 1);
-    const yyyy = now.getFullYear();
-    const hh = pad(now.getHours());
-    const min = pad(now.getMinutes());
-    const ss = pad(now.getSeconds());
-    return `${dd}.${mm}.${yyyy} ${hh}:${min}:${ss}`;
+	const now = new Date();
+	const pad = (n) => n.toString().padStart(2, "0");
+	return `${pad(now.getDate())}.${pad(
+		now.getMonth() + 1
+	)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(
+		now.getMinutes()
+	)}:${pad(now.getSeconds())}`;
 }
 
+async function createBody(el) {
+	const izdelekId = `softT${el.id}`;
+	const atributInfo = await getAtributInfo(el.ean);
+	const slike = await getSlikaInfo(el.ean);
+
+const dodatneLastnosti = {
+  lastnost: atributInfo[0].map(attr => ({
+    '@_naziv': attr.komponenta,
+    '@_id': attr.komponenta_id,
+    cdata: attr.atribut || "",
+  }))
+};
+
+	let count = 1;
+	const dodatneSlike = {};
+	slike
+		.filter((img) => img.tip === "dodatna")
+		.forEach((img) => {
+			dodatneSlike[`dodatnaSlika${count++}`] = { cdata: img.slika_url };
+		});
+
+	const slikaMala = slike.find((s) => s.tip === "mala")?.slika_url || "";
+	const slikaVelika = slike.find((s) => s.tip === "velika")?.slika_url || "";
+
+	return {
+		"@_id": el.id,
+		izdelekID: izdelekId,
+		EAN: el.ean,
+		izdelekIme: { cdata: el.izdelek_ime },
+		url: { cdata: el.url || "" },
+		opis: { cdata: el.izdelek_opis || "" },
+		PPC: el.ppc,
+		cenaAkcijska: "",
+		nabavnaCena: el.nabavna_cena,
+		DC: el.dealer_cena,
+		DRabat: 0,
+		blagovnaZnamka: {
+			"@_id": el.blagovna_znamka,
+			cdata: el.blagovna_znamka,
+		},
+		dimenzijePaketa: {
+			"@_kratekZapisVCm": el.dimenzije_paketa || "xx",
+			depth: { "@_unitOfMeasure": "MM", cdata: el.depth || "/" },
+			height: { "@_unitOfMeasure": "MM", cdata: el.height || "/" },
+			width: { "@_unitOfMeasure": "MM", cdata: el.width || "/" },
+			grossWeight: {
+				"@_unitOfMeasure": "KG",
+				cdata: el.grossWeight || "/",
+			},
+			netWeight: { "@_unitOfMeasure": "KG", cdata: el.netWeight || "/" },
+		},
+		davcnaStopnja: el.davcna_stopnja,
+		kategorija: { "@_id": el.kategorija_id, cdata: el.kategorija },
+		slikaMala: { cdata: slikaMala },
+		slikaVelika: { cdata: slikaVelika },
+		dobava: { "@_id": el.zaloga === "Na zalogi" ? 1 : 0, cdata: el.zaloga },
+		spletnaStranProizvajalca: { cdata: el.spletnaStranProizvajalca || "" },
+		dodatneLastnosti,
+		dodatneSlike,
+	};
+}
 
 export async function build() {
-  const file = `xml/build/softtrade.xml`;
+	const file = "xml/build/softtrade.xml";
 
-  const head = `<?xml version="1.0" encoding="UTF-8"?>
-<podjetje id="Softtrade, Ljutomer" ts="${getCurrentTimestamp()}" opis_storitve="https://www.pcplus.si/catalog-export/">
-  <izdelki>
-`;
-  const foot = `</izdelki>
-</podjetje>`;
+	const spinnerChars = ["|", "/", "-", "\\"];
+	let spinnerIndex = 0;
 
-  try {
-    console.log("Fetching product list...");
-    const izdelekInfo = await getIzdelekInfo();
+	const spinner = setInterval(() => {
+		process.stdout.write(
+			`\rBuilding XML ${
+				spinnerChars[spinnerIndex++ % spinnerChars.length]
+			}`
+		);
+	}, 200);
 
-    console.log(`Generating ${izdelekInfo[0].length} product entries...`);
-    const bodies = await Promise.all(
-      izdelekInfo[0].map(el => createBody(el))
-    );
+	try {
+		console.log("Fetching product list...");
+		const izdelekInfo = await getIzdelekInfo();
 
-    const xmlContent = head + bodies.join("") + foot;
+		console.log(`Generating ${izdelekInfo[0].length} product entries...`);
+		const allProducts = await Promise.all(
+			izdelekInfo[0].map((el) => createBody(el))
+		);
 
-    console.log("Writing XML file...");
-    await fsp.writeFile(file, xmlContent, "utf8");
+		const rootObj = {
+			podjetje: {
+				"@_id": "Softtrade, Ljutomer",
+				"@_ts": getCurrentTimestamp(),
+				"@_opis_storitve": "",
+				izdelki: {
+					izdelek: allProducts,
+				},
+			},
+		};
 
-    console.log(`✅ Writing of ${file} finished!`);
-  } catch (err) {
-    console.error(`❌ Error building XML: ${err.message}`);
-  }
+		const fullXml =
+			`<?xml version="1.0" encoding="UTF-8"?>\n` + parser.build(rootObj);
+
+		clearInterval(spinner);
+		console.log("Writing XML file...");
+		await fsp.writeFile(file, fullXml, "utf8");
+
+		console.log(`✅ Writing of ${file} finished!`);
+	} catch (err) {
+		clearInterval(spinner);
+		console.error(`❌ Error building XML: ${err.message}`);
+	}
 }
 
-build()
+build();

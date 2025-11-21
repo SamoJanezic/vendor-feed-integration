@@ -14,9 +14,11 @@ export function createTable(tableName) {
 
 export function insertIntoTable(tableName, data) {
 	if (data.length) {
-		if(tableName === modelsMap.IzdelekDobavitelj) {
+		if (tableName === modelsMap.IzdelekDobavitelj) {
 			tableName
-				.bulkCreate(data, { updateOnDuplicate: ['dealer_cena', 'nabavna_cena', 'ppc'] })
+				.bulkCreate(data, {
+					updateOnDuplicate: ["dealer_cena", "nabavna_cena", "ppc"],
+				})
 				.then(() => {
 					console.log(
 						`Successfully inserted ${data.length} entries into ${tableName}`
@@ -85,8 +87,8 @@ export async function getIzdelekInfo() {
 			dealer_cena,
 			blagovna_znamka,
 			davcna_stopnja,
-			kategorija_id,
-			kategorija,
+			KATEGORIJA.kategorija_id,
+			KATEGORIJA.kategorija,
 			zaloga
 		FROM IZDELEK
 			INNER JOIN
@@ -122,52 +124,52 @@ export async function getSlikaInfo(ean) {
 		where: {
 			izdelek_ean: ean,
 		},
-		raw: true
-	})
+		raw: true,
+	});
 }
 
 export async function upsertTable(tableName, allData) {
-    for (const data of allData) {
-        const [instance, created] = await tableName.findOrCreate({
-            where: {
-                izdelek_ean: data.izdelek_ean,
-                DOBAVITELJ_dobavitelj: data.DOBAVITELJ_dobavitelj
-            },
-            defaults: {
-                KATEGORIJA_kategorija: data.KATEGORIJA_kategorija,
-                izdelek_ime: data.izdelek_ime,
-                izdelek_opis: data.izdelek_opis,
-                izdelek_kratki_opis: data.izdelek_kratki_opis,
-                nabavna_cena: data.nabavna_cena,
-                dealer_cena: data.dealer_cena,
-                ppc: data.ppc,
-                zaloga: data.zaloga,
-                aktiven: data.aktiven
-            }
-        });
+	for (const data of allData) {
+		const [instance, created] = await tableName.findOrCreate({
+			where: {
+				izdelek_ean: data.izdelek_ean,
+				DOBAVITELJ_dobavitelj: data.DOBAVITELJ_dobavitelj,
+			},
+			defaults: {
+				KATEGORIJA_kategorija: data.KATEGORIJA_kategorija,
+				izdelek_ime: data.izdelek_ime,
+				izdelek_opis: data.izdelek_opis,
+				izdelek_kratki_opis: data.izdelek_kratki_opis,
+				nabavna_cena: data.nabavna_cena,
+				dealer_cena: data.dealer_cena,
+				ppc: data.ppc,
+				zaloga: data.zaloga,
+				aktiven: data.aktiven,
+			},
+		});
 
-        if (!created) {
-            await instance.update({
-                dealer_cena: data.dealer_cena,
-                nabavna_cena: data.nabavna_cena,
-                ppc: data.ppc,
-                zaloga: data.zaloga,
-            });
-        }
-    }
+		if (!created) {
+			await instance.update({
+				dealer_cena: data.dealer_cena,
+				nabavna_cena: data.nabavna_cena,
+				ppc: data.ppc,
+				zaloga: data.zaloga,
+			});
+		}
+	}
 }
 
 export async function updateKategorija(marza, id) {
-    try {
-        const [affectedRows] = await Kategorija.update(
-            { marza },
-            {
-                where: { kategorija_id: id }
-            }
-        );
-        return affectedRows;
-    } catch (error) {
-        console.error("Error updating Kategorija:", error);
-        throw error;
-    }
+	try {
+		const [affectedRows] = await Kategorija.update(
+			{ marza },
+			{
+				where: { kategorija_id: id },
+			}
+		);
+		return affectedRows;
+	} catch (error) {
+		console.error("Error updating Kategorija:", error);
+		throw error;
+	}
 }
