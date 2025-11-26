@@ -20,6 +20,9 @@
     "build": "node scripts/builder",
     "app": "node ./app.js",
     "update": "node xml-downloader/app.js",
-    "test": "node scripts/test.js"
+    "seed": "node scripts/seed.js"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.1"
   }
 }
