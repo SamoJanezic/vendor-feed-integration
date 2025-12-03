@@ -46,7 +46,7 @@ const gorenjeCategoryMap = {
 	[cn.K_PECICA]: ["Pečica", "Mini pečica"],
 	[cn.K_STEDILNIK]: ["Kuhalni aparat"],
 	[cn.SUSILEC_SADJA]: ["Sušilnik hrane"],
-	[cn.HIFI]: ["Zvočniki"],
+	[cn.SOUND_BAR]: ["Zvočniki"],
 	[cn.TV]: ["LCD televizor"],
 	[cn.Z_RAZVLAZILEC]: ["Razvlažilnik zraka"],
 	[cn.VAP]: ["Čistilnik talnih površin", "Čistilnik tal"],

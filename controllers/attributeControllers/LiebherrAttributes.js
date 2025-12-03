@@ -36,12 +36,12 @@ class LiebherrAttributes {
 		}
 
 		const attributes = {};
+        const filterData = {};
 
 		const attributeHandlers = {
 			Hladilniki: {
-				Tip: el => ({}),
+				// Tip: el => ({}),
 				"Vrsta vgradnje": el => ({ "Vrsta": el['value'] === "Možna vgradnja" ? "Vgradni" : "Samostoječi" }),
-				Vrsta: el => ({}),
 				"Razred energijske učinkovitosti": el => ({ "Energijski razred": el['value'] }),
 				"Hladilna tehnologija": el => ({"No frost": el['value'] === 'NoFrost' ? 'Da' : 'Ne' }),
 				"Zunanje mere: višina / širina / globina": el => ({ "Višina": LiebherrAttributes.formatDimensions(el['value'])['height'], "Širina": LiebherrAttributes.formatDimensions(el['value'])['width'] }),
@@ -49,7 +49,7 @@ class LiebherrAttributes {
 				"Število vrat": el => ({}),
 			},
 			Zamrzovalniki: {
-				Tip: el => ({}),
+				// Tip: el => ({}),
 				"Skupna prostornina": el => ({ "Prostornina": el['value'] }),
 				"Razred energijske učinkovitosti": el => ({ "Energijski razred": el['value'] }),
 				"Hladilna tehnologija": el => ({"No frost": el['value'] === 'NoFrost' ? 'Da' : 'Ne' }),
@@ -63,11 +63,15 @@ class LiebherrAttributes {
 			if ( LiebherrAttributes.excludeAttr(el)) return;
             const id = el['name'];
             const handler = handlers[id];
-            const result = handler ? handler(el) : LiebherrAttributes.defaultHandler(el);
-            Object.assign(attributes, result);
+            if (handler) {
+				const result = handler(el);
+				Object.assign(filterData, result);
+			} else {
+                Object.assign(attributes, LiebherrAttributes.defaultHandler(el));
+			}
         });
-		// console.log(attributes)
-        return attributes;
+
+        return { attributes, filterData };
 	}
 }
 

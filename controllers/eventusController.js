@@ -48,6 +48,7 @@ export default class EventusController extends DobaviteljController {
 		"Varnostne kopije in dodatki",
 		"Kabli",
 		"Adapterji",
+        "Računalniki"
 	]);
 
 	exceptions(param) {

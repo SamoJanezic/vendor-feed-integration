@@ -51,7 +51,7 @@ const categoryNames = Object.freeze({
 	SOFTWARE: "Programska oprema",
 	// KRIPTO SVET
 	CRYPTO: "Kripto svet",
-	C_WALLET: "Denarnice",
+	C_WALLET: "Kripto denarnice",
 	// ZZVOK IN SLIKA
 	AUDIO_VIDEO: "Zvok in slika",
 	TV: "Televizije",
@@ -75,7 +75,7 @@ const categoryNames = Object.freeze({
 	// BELA TEHNIKA
 	PRALNI: "Pralni stroji",
 	SUSILNI: "Sušilni stroji",
-	PRALNO_SUŠILNI: "Pralno Sušilni Stroji",
+	PRALNO_SUŠILNI: "Pralno sušilni stroji",
 	POMIVALNI: "Pomivalni stroji",
 	HLADILNIK: "Hladilniki",
 	ZAMRZOVALNIK: "Zamrzovalniki",

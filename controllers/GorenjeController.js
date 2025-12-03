@@ -1,6 +1,7 @@
 import { xmlParser } from "./parseController.js";
 import DobaviteljController from "./DobaviteljController.js";
 
+
 export default class GorenjeController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
@@ -56,6 +57,7 @@ export default class GorenjeController extends DobaviteljController {
 		const data = xmlParser(this.file, this.nodes, this.encoding);
         const dataFeatures = xmlParser(this.file,'mabagor.features.feature' , this.encoding)
         // console.log(features)
+        // data.forEach(el => console.log(el.product_content.basic_information.tech_specs))
 		data.forEach(el => this.getSingleData(el, dataFeatures))
 	}
 
@@ -70,6 +72,7 @@ export default class GorenjeController extends DobaviteljController {
 		const bacArray = Array.isArray(brandAndCategory) ? brandAndCategory : brandAndCategory ? [brandAndCategory] : null;
 		const category = bacArray.find(item => item['@_category_context'] === 'product_type')?.['#text'] || null;
 		const brand = bacArray.find(item => item['@_category_context'] === 'product_brand')?.['#text'] || null;
+        const specifications = this.extractSpecifications(data);
 
 		if (this.exceptions(category)) return;
 
@@ -85,7 +88,7 @@ export default class GorenjeController extends DobaviteljController {
 			slika_mala: imageArray?.[0]?.mobile_url || null,
 			slika_velika: imageArray?.[0]?.url || null,
 			dodatne_slike: imageArray?.map(img => img.url),
-			dodatne_lastnosti: null,
+			dodatne_lastnosti: specifications,
 			blagovna_znamka: brand,
 			kategorija: category,
 			eprel_id: null,
@@ -96,6 +99,48 @@ export default class GorenjeController extends DobaviteljController {
 		}
 		this.allData.push(singleObject);
 	}
+
+    extractSpecifications(product) {
+        const allSpecs = [];
+        const techSpecsPaths = [
+            product?.product_content?.basic_information?.tech_specs,
+            product?.product_content?.tech_specs
+        ];
+
+        const safeText = textObj => {
+            if (!textObj) return "";
+            if (typeof textObj === "string") return textObj;
+            return textObj["#text"] || "";
+        };
+
+        for (const techSpecs of techSpecsPaths) {
+            if (!techSpecs?.specificationgroup) continue;
+
+            const groups = Array.isArray(techSpecs.specificationgroup)
+                ? techSpecs.specificationgroup
+                : [techSpecs.specificationgroup];
+
+            for (const group of groups) {
+                const groupLabel = group['@_label'] || group['@_id'] || null;
+                const specs = Array.isArray(group.specification)
+                    ? group.specification
+                    : [group.specification];
+
+                for (const spec of specs) {
+                    allSpecs.push({
+                        id: spec['@_id'],
+                        code: spec['@_code_id'] || spec['@_compoundcode_id'] || null,
+                        title: safeText(spec.title),
+                        value: safeText(spec.value),
+                        unit: spec.unit || null,
+                        group: groupLabel
+                    });
+                }
+            }
+        }
+
+        return allSpecs;
+    }
 
     createOpis(productFeatures, allFeatures) {
         // console.log(productFeatures)

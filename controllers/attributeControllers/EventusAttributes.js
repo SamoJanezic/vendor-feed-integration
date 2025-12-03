@@ -14,9 +14,32 @@ class EventusAttributes {
         return match ? `${match[0]}"` : text;
     }
 
+    static mbToGb(text) {
+    const match = text.match(/([\d.,]+)\s*MB/i);
+    if (!match) return text;
+    const mb = parseFloat(match[1].replace(',', '.'));
+    const gb = mb / 1024;
+    return Number.isInteger(gb) ? `${gb} GB` : `${gb.toFixed(1)} GB`;
+}
+
     static extractResolution(text) {
         const match = text.match(/\b\d{3,4}\s?x\s?\d{3,4}\b/i);
         return match ? match[0].replace(/\s?x\s?/i, ' x ') : '';
+    }
+
+    static extractConnectivity(text) {
+        if (!text || typeof text !== "string") return null;
+
+        return text.toLowerCase().includes("bluetooth")
+            ? "Brezžična"
+            : "Žična";
+    }
+
+    static extractPortCount(text) {
+        if (!text || typeof text !== "string") return null;
+
+        const match = text.match(/\b(\d+)\s*x\b/i);
+        return match ? `${match[1]}x` : null;
     }
 
     static defaultHandler(el) {
@@ -27,171 +50,79 @@ class EventusAttributes {
         if (!this.attribute || !this.attribute.length) return {};
 
         const attributes = {};
+        const filterData = {};
+
+        if (this.category === 'Tablični računalniki') {
+            console.log(this.attribute)
+        }
 
         const attributeHandlers = {
-            'All in one': {
-                procesor: el => ({ Procesor: el['#text'] }),
-                pomnilnik: el => ({ 'Kapaciteta pomnilnika': EventusAttributes.extractCapacity(el['#text']) }),
-                zaslon: el => ({
-                    'Velikost zaslona': EventusAttributes.extractScreenSize(el['#text']),
-                    'Ločljivost': EventusAttributes.extractResolution(el['#text'])
-                }),
-                trdi_disk: el => ({ 'Kapaciteta diska': EventusAttributes.extractCapacity(el['#text']) }),
-                graficna_kartica: el => ({ 'Grafična kartica': el['#text'] }),
-                operacijski_sistem: el => ({ 'Operacijski sistem': el['#text'] }),
-            },
-            Računalniki: {
-                procesor: el => ({ Procesor: el['#text'] }),
-                pomnilnik: el => ({ 'Kapaciteta pomnilnika': EventusAttributes.extractCapacity(el['#text']) }),
-                trdi_disk: el => ({ 'Kapaciteta diska': EventusAttributes.extractCapacity(el['#text']) }),
-                graficna_kartica: el => ({ 'Grafična kartica': el['#text'] }),
-                operacijski_sistem: el => ({ 'Operacijski sistem': el['#text'] }),
-            },
-            Mini: {
-                procesor: el => ({ Procesor: el['#text'] }),
-                pomnilnik: el => ({ 'Kapaciteta pomnilnika': EventusAttributes.extractCapacity(el['#text']) }),
-                trdi_disk: el => {
-                    if (el['#text'].includes('možnost')) return { 'Kapaciteta diska': 'brez' };
-                    return { 'Kapaciteta diska': EventusAttributes.extractCapacity(el['#text']) };
-                },
-                graficna_kartica: el => ({ 'Grafična kartica': el['#text'] }),
-                operacijski_sistem: el => ({ 'Operacijski sistem': el['#text'] }),
-            },
-            'Tablični računalniki': {
-                procesor: el => ({ Procesor: el['#text'] }),
-                pomnilnik: el => ({ 'Kapaciteta pomnilnika': EventusAttributes.extractCapacity(el['#text']) }),
-                zaslon: el => ({
-                    'Velikost zaslona': EventusAttributes.extractScreenSize(el['#text']),
-                    'Ločljivost': EventusAttributes.extractResolution(el['#text'])
-                }),
-                trdi_disk: el => ({ 'Kapaciteta diska': EventusAttributes.extractCapacity(el['#text']) }),
-                graficna_kartica: el => ({ 'Grafična kartica': el['#text'] }),
-                operacijski_sistem: el => ({ 'Operacijski sistem': el['#text'] }),
-            },
-            'NAS sistemi': {
-                sto_procesor: el => ({ Procesor: el['#text'] }),
-                tip_sto: el => ({ Postavitev: el['#text'] }),
-                sto_pomnilnik: el => ({ 'Kapaciteta pomnilnika': EventusAttributes.extractCapacity(el['#text']) }),
-                sto_prikljucki: el => {
-                    const match = el['#text'].match(/\b\d+x\sRJ-?45\b/i);
-                    return match ? { 'št. LAN priklopov': match[0].replace('-', '') } : {};
-                },
-                sto_reze_za_diske: el => ({ 'Število diskov': el['#text'] }),
-            },
-            Monitorji: {
-                priklop: el => ({ Vhodi: el['#text'] }),
-                mon_frekvenca_tekst: el => ({ Osveževanje: el['#text'] }),
-                tip_matrike: el => ({ Matrika: el['#text'] }),
-                diagonala_zaslona: el => ({ 'Velikost zaslona': el['#text'] }),
-                optimalna_locljivost: el => ({ 'Ločljivost': el['#text'] }),
-                dodatno: el => el['#text'].includes('ukrivljenost') ? { Ukrivljenost: 'Da' } : {},
-                vgrajeni_zvocniki: el => ({ Zvočniki: el['#text'] }),
-            },
-            'Osnovne plošče': {
-                podnozje: el => ({ Podnožje: el['#text'] }),
-                vezni_nabor: el => ({ 'Vezni nabor': el['#text'] }),
-                format_filter_maticne: el => ({ Format: el['#text'] }),
-                pomnilnik: el => ({ 'Pomnilniške reže': el['#text'] }),
-            },
-            Procesorji: {
-                tip_procesorja: el => ({ Procesor: el['#text'] }),
-                podnozje: el => ({ Podnožje: el['#text'] }),
-            },
-            Pomnilniki: {
-                tip_ram: el => ({ 'Vrsta pomnilnika': el['#text'] }),
-                kapaciteta: el => ({ 'Kapaciteta pomnilnika': el['#text'].replace(' ', '') }),
-            },
-            'Trdi diski': {
-                tip_hdd: el => el['#text'] === 'No' ? {} : { 'Vrsta diska': el['#text'] },
-                kapaciteta_hdd_tekst: el => ({ 'Kapaciteta diska': el['#text'] }),
-                vmesnik: el => ({ Vmesnik: el['#text'] }),
-                format: el => el['#text'] === 'No' ? {} : { 'Velikost diska': el['#text'] },
-            },
-            Ohišja: {
-                cas_tip: el => ({ Velikost: el['#text'] }),
-                napajalnik: el => ({ Napajalnik: el['#text'] }),
-            },
-            Napajalniki: {
-                moc: el => ({ Moč: el['#text'] }),
-                pws_format_filter: el => ({ Format: el['#text'] }),
-                pws_napetosti_tokovi: el => ({ Modulani: el['#text'] }),
-            },
             'Grafične kartice': {
-                proizvajalec_cipovja: el => ({ GPU: el['#text'] }),
-                graficni_procesor: el => ({ 'Grafični procesor': el['#text'] }),
-                graficni_pomnilnik: el => ({ 'Grafični pomnilnik': el['#text'] }),
+                Serija: el => ({'GPU': el['#text']}),
+                // 'Grafični procesor': el => ({}),
+                'Količina pomnilnika': el => ({'Pomnilnik': EventusAttributes.mbToGb(el['#text'])})
             },
-            Hlajenje: {
-                namembnost: el => ({ 'Vrsta hlajenja': el['#text'] }),
+            'HI-FI in Prenosni zvočniki': {
+                'Tip izdelka': el => ({'Vrsta': el['#text']}), // Vrsta
+                Priključki: el => ({'Priiključki': el['#text']})
             },
-            Tipkovnice: {
-                povezljivost: el => ({ Povezljivost: el['#text'] }),
-                drugo: el => el['#text'].includes('mehanske') ? { Mehanska: 'Da' } : {},
+            'Hlajenje': {'Vrsta hlajenja': el => ({'Tip izdelka': el['#text']})},
+            'Spletne kamere': {'Ločljivost kamere': el => ({'Ločljivost': el['text']})},
+            'Mediji': {'Tip naprave': el => ({'Vrsta medija': el['#text']})},
+            'Miške': {
+                'Brezžična povezava': el => ({'Povezava': el['#text'] === 'Da' ? 'Brezžične' : 'Žične'}),
+                'Tip senzorja': el => ({'Senzor': el['#text']}),
+                'Ločljivost senzorja': el => ({'DPI': el['#text']}),
             },
-            Miške: {
-                povezljivost: el => ({ Povezljivost: el['#text'] }),
-                tip_mou: el => ({ Senzor: el['#text'] }),
-                mou_locljivost: el => ({ Ločljivost: el['#text'] }),
+            'Monitorji': {
+                'Ločljivost': el => ({'Ločljivost': el['#text']}),
+                'Frekvenca osveženja': el => ({'Osveževanje': el['#text']}),
+                'Tip panela': el => ({'Matrika': el['#text']}),
+                'Ukrivljenost zaslona': el => ({'Ukrivljenost': el['#text'] ? 'Da' : 'Ne'}),
+                'Velikost zaslona': el => ({'Velikost zaslona': el['#text']}),
+                'Video vhodi': el => ({'Video vhodi': el['#text']})
             },
-            Slušalke: {
-                heapho_povezljivost: el => ({ Povezava: el['#text'] }),
-                heapho_mikrofon: el => ({ Mikrofon: el['#text'] }),
+            'Ohišja': {
+                'Format ohišja': el => ({'Velikost': el['#text']}),
+                'Napajalnik': 'Ne'
             },
-            'Usmerjevalniki, stikala in AP': {
-                netswi_namestitev: el => ({ Vrsta: 'Stikalo' }),
-                netapo_postavitev_filter: el => ({ Vrsta: 'Dostopna točka' }),
-                antena: el => ({ Vrsta: 'Usmerjevalnik' }),
-                stevilo_portov: el => {
-                    const numberMatch = el['#text'].match(/\b\d+x\b/i);
-                    const speedMatch = el['#text'].match(/\b(?:\d+(\.\d+)?(?:\/\d+)*\s?(Mbps|Gbps)|Gigabit)\b/i);
-                    return {
-                        'Število LAN priklopov': numberMatch ? numberMatch[0] : 'Ni navedeno',
-                        'Hitrost': speedMatch ? speedMatch[0].replace(/\s/g, '') : 'Ni navedeno'
-                    };
-                },
-                lan_porti: el => {
-                    const numberMatch = el['#text'].match(/\b\d+x\b/i);
-                    const speedMatch = el['#text'].match(/\b(?:\d+(\.\d+)?(?:\/\d+)*\s?(Mbps|Gbps)|Gigabit)\b/i);
-                    return {
-                        'Število LAN priklopov': numberMatch ? numberMatch[0] : 'Ni navedeno',
-                        'Hitrost': speedMatch ? speedMatch[0].replace(/\s/g, '') : 'Ni navedeno'
-                    };
-                },
-                hitrost: el => ({ Hitrost: el['#text'] }),
-                brezzicna_hitrost: el => ({ Hitrost: el['#text'] }),
+            'Pomnilniki': {
+                'Kapaciteta pomnilnika': el => ({'Kapaciteta pomnilnika': el['#text']}),
+                'Vrsta pomnilnika': el => ({'Vrsta pomnilnika': el['#text']}),
             },
-            'Mrežne kartice, antene, WIFI ojačevalci': {
-                hitrost: el => ({ Hitrost: el['#text'] }),
-                netcrd_povezava_filter: el => ({ Vrsta: 'Mrežna kartica', 'Vrsta povezave': el['#text'] }),
-                netant_tip_filter: el => ({ Vrsta: 'Antena' }),
-                netext_tip_filter: el => ({ Vrsta: 'Wifi ojačevalec' }),
-                netext_hitrost: el => ({ Hitrost: el['#text'] }),
-            },
-            Zvočniki: {
-                spk_priklop_filter: el => ({ Povezava: el['#text'] }),
-                stevilo_zvocnikov: el => ({ Sistem: el['#text'] }),
-            },
-            'Spletne kamere': {
-                cam_locljivost_snemanja: el => ({ Ločljivost: el['#text'] }),
-            },
-            'USB ključi': {
-                kapaciteta: el => ({ "Kapaciteta ključka": el['#text'] }),
-                vmesnik: el => ({ Hitrost: el['#text'] }),
+            'Slušalke': {
+                'Mikrofon': el => ({'Mikrofon': el['#text'] === 'Da' ? 'Da' : 'Ne'}),
+                'Brezžična povezava': el => ({'Povezava': el['#text'] === 'Da' ? 'Brezžične' : 'Žične'}),
             },
             'Spominske kartice in čitalci': {
-                kapaciteta: el => ({ "Kapaciteta kartice": el['#text'] }),
-                hitrost_zapisovanja: el => ({ 'Hitrost zapisovanja': el['#text'] }),
-                hitrost_branja: el => ({ 'Hitrost branja': el['#text'] }),
-                tip_spominske_kartice: el => ({ 'Tip kartice': el['#text'] }),
-                tip_carrdr: el => ({ Čitalec: 'Da' }),
+                // Kapaciteta	TIP kartice	Čitalec	hitrost zapisovanja	hitrost branja
+
             },
-            'Brezprekinitveni napajalniki': {
-                izhodna_moc_w: el => ({ Moč: el['#text'] }),
-                ups_rack: el => ({ Postavitev: el['#text'] }),
+            'Tablični računalniki': {
+                'Ločljivost zaslona': el => ({'Ločljivost': el['#text']}),
+                'Velikost zaslona': el => ({'Velikost zaslona': el['#text']}),
+                'Kapaciteta': el=> ({'Kapaciteta pomnilnika': el['#text']}),
             },
-            'Konferenčna oprema': {
-                // Default handler
-            }
+            'Tipkovnice': {
+                'Brezžična povezava': el => ({'Povezava': el['#text'] === 'Ne' ? 'Žična' : 'Brezžična'}),
+                'Mehanska': el => ({'Mehanska': el['#text'] === 'Ne' ? 'Ne' : 'Da'}),
+            },
+            'Trdi diski': {
+                'Vrsta diska': el => ({'Vrsta diska': el['#text']}),
+                'Kapaciteta diska': el => ({'Kapaciteta diska': el['#text']}),
+                'Velikost diska': el => ({'Velikost diska': el['#text']}),
+                'Tip': el => ({'Tip diska': el['#text']}),
+            },
+            'Usmerjevalniki, stikala in AP': {
+                'Tip naprave': el => ({'Vrsta': el['#text']}),
+                'Wi-Fi 5 GHz Hitrost': el => ({'Hitrost': el['#text']}),
+                'Vhodi': el => ({'št. LAN priklopov': EventusAttributes.extractPortCount(el['#text'])})
+            },
+            'Zvočniki': {
+                'Priklop': el => ({'Povezava': EventusAttributes.extractConnectivity(el['#text'])}),
+                'Tip zvočnika': el => ({'Sistem': el['#text']}, {'Vrsta': el['text'] ? 'Zvočnik' : null}),
+            },
+            'Športne ure': {}
         };
 
         const handlers = attributeHandlers[this.category] || {};
@@ -199,11 +130,15 @@ class EventusAttributes {
         this.attribute.forEach(el => {
             const id = el['@_naziv'];
             const handler = handlers[id];
-            const result = handler ? handler(el) : EventusAttributes.defaultHandler(el);
-            Object.assign(attributes, result);
+            if (handler) {
+				const result = handler(el);
+				Object.assign(filterData, result);
+			} else {
+                Object.assign(attributes, EventusAttributes.defaultHandler(el));
+			}
         });
 
-        return attributes;
+        return { attributes, filterData };
     }
 }
 

@@ -2,6 +2,7 @@ import { db } from "../db/db.js";
 import { xmlParser } from "./parseController.js";
 import { insertIntoTable } from "../db/sql.js";
 import { modelsMap } from "../models/index.js";
+import { categoryLookup, filterLookup } from "../services/filters/filterIdMap.js";
 import "../models/associations.js";
 
 export default class DobaviteljController {
@@ -27,6 +28,7 @@ export default class DobaviteljController {
 	komponenta = null;
 	atribut = null;
 	slika = null;
+	filtri = null;
 
 	escapeXml(str) {
 		return str
@@ -41,19 +43,19 @@ export default class DobaviteljController {
 		if (typeof this.file === "object") {
 			return this.file.map((el) => {
 				if (!el?.fileName || !el?.node) {
-                    console.warn("Skipping invalid file entry:", el);
-                    return null;
-                }
-                return xmlParser(el.fileName, el.node);
+					console.warn("Skipping invalid file entry:", el);
+					return null;
+				}
+				return xmlParser(el.fileName, el.node);
 			});
 		}
 		try {
-            const data = xmlParser(this.file, this.nodes, this.encoding);
-            return data;
-        } catch (err) {
-            console.error("Error parsing XML file:", err.message);
-            return null;
-        }
+			const data = xmlParser(this.file, this.nodes, this.encoding);
+			return data;
+		} catch (err) {
+			console.error("Error parsing XML file:", err.message);
+			return null;
+		}
 	}
 
 	createDataObject() {
@@ -119,16 +121,17 @@ export default class DobaviteljController {
 		const newCat = flatCategoryMap[kategorija];
 		if (newCat) {
 			if (
-				this.name === "asbis" &&
-				newCat === "Usmerjevalniki, stikala in AP" &&
-				this.routerTypes[kategorija] &&
-				Array.isArray(dodatne_lastnosti)
-			) {
-				dodatne_lastnosti.push({
-					"@_Name": "Vrsta",
-					"@_Value": this.routerTypes[kategorija],
-				});
-			}
+                this.name === "asbis" &&
+                newCat === "Usmerjevalniki, stikala in AP" &&
+                this.routerTypes &&
+                this.routerTypes[kategorija] &&
+                Array.isArray(dodatne_lastnosti)
+            ) {
+                dodatne_lastnosti.push({
+                    "@_Name": "Vrsta",
+                    "@_Value": this.routerTypes[kategorija],
+                });
+            }
 			kategorija = newCat;
 		}
 
@@ -136,25 +139,45 @@ export default class DobaviteljController {
 	}
 
 	processLastnosti(data) {
-		let lastnosti = [
-			{
-				ean: data.ean,
-				kategorija: data.kategorija,
-				lastnostNaziv: "Proizvajalec",
-				lastnostVrednost: data.blagovna_znamka,
-			},
-		];
+		const catId = categoryLookup[data.kategorija];
+		if (!catId) {
+			console.warn(" category:", data.kategorija);
+		}
 
-		const attrs = new this.Attributes(
+		const lookup = filterLookup[catId] || {};
+
+
+		let filtri = [];
+		let lastnosti = [];
+
+		if (lookup["Proizvajalec"]) {
+			filtri.push({
+				izdelek_ean: data.ean,
+				filter_id: lookup["Proizvajalec"],
+				filter_vrednost: data.blagovna_znamka,
+			});
+		}
+
+		const {attributes, filterData}  = new this.Attributes(
 			data.kategorija,
 			Array.isArray(data.dodatne_lastnosti?.lastnost)
 				? data.dodatne_lastnosti.lastnost
 				: data.dodatne_lastnosti
-		).formatAttributes();
+		).formatAttributes() || { filterData: {}, attributes: {} };
 
-		if (attrs && Object.keys(attrs).length) {
+		if (filterData && Object.keys(filterData).length) {
+			filtri.push(
+				...Object.entries(filterData).map(([naziv, vrednost]) => ({
+					izdelek_ean: data.ean,
+					filter_id: lookup[naziv] ?? null,
+					filter_vrednost: vrednost,
+				}))
+			);
+		}
+
+		if (attributes && Object.keys(attributes).length) {
 			lastnosti.push(
-				...Object.entries(attrs).map(([naziv, vrednost]) => ({
+				...Object.entries(attributes).map(([naziv, vrednost]) => ({
 					ean: data.ean,
 					kategorija: data.kategorija,
 					lastnostNaziv: naziv,
@@ -162,7 +185,19 @@ export default class DobaviteljController {
 				}))
 			);
 		}
-		return lastnosti;
+
+        // console.log(filtri)
+        filtri.forEach(el => {
+            if(!el.filter_id) {
+                console.log(el, data.kategorija)
+            }
+        })
+
+        // console.log(lastnosti)
+        // console.log("attrs from Attributes.formatAttributes:", { filterData, attributes });
+        // process.exit();
+
+		return {lastnosti, filtri};
 	}
 
 	mapKomponentaAndAtribut(lastnosti) {
@@ -219,32 +254,35 @@ export default class DobaviteljController {
 	processAllData() {
 		const flatCategoryMap = this.flattenCategoryMap(this.categoryMap);
 
-		const { slike, lastnosti } = this.allData.reduce(
+		const { slike, lastnosti, filtri } = this.allData.reduce(
 			(acc, rawData) => {
 				const updated = this.processCategory(rawData, flatCategoryMap);
 				rawData.kategorija = updated.kategorija;
-				if (typeof rawData.kratki_opis === "string")
+
+				if (typeof rawData.kratki_opis === "string") {
 					rawData.kratki_opis = rawData.opis
 						? rawData.opis.substring(0, 100)
 						: null;
+				}
+
 				acc.slike.push(...this.processImages(updated || []));
-				acc.lastnosti.push(...(this.processLastnosti(updated) || []));
+				acc.lastnosti.push(...(this.processLastnosti(updated).lastnosti || []));
+				acc.filtri.push(...(this.processLastnosti(updated).filtri || []));
 				return acc;
 			},
-			{ slike: [], lastnosti: [] }
+			{ slike: [], lastnosti: [], filtri: [] }
 		);
 
 		const { komponenta, atribut } = this.mapKomponentaAndAtribut(lastnosti);
-
 		Object.assign(this, {
 			slika: slike,
 			komponenta,
 			atribut,
+			filtri,
 		});
 	}
 
 	prepareDbData() {
-        // process.exit();
 		const izdelekData = this.allData.map((el) => {
 			return {
 				ean: el.ean,
@@ -270,19 +308,15 @@ export default class DobaviteljController {
 				aktiven: 1,
 			};
 		});
-		const kategorijaData = this.allData.map((el) => {
-			return { kategorija: el.kategorija, marza: 0 };
-		});
 
 		return {
 			izdelekData: izdelekData,
 			izdelekDobaviteljData: izdelekDobaviteljData,
-			kategorijaData: kategorijaData,
 		};
 	}
 
 	async insertDataIntoDb() {
-		const { izdelekData, izdelekDobaviteljData, kategorijaData } = this.prepareDbData();
+		const { izdelekData, izdelekDobaviteljData } = this.prepareDbData();
 
 		db.sync();
 		await insertIntoTable(modelsMap.Dobavitelj, { dobavitelj: this.name });
@@ -302,6 +336,9 @@ export default class DobaviteljController {
 		) {
 			await insertIntoTable(modelsMap.Komponenta, this.komponenta);
 			await insertIntoTable(modelsMap.Atribut, this.atribut);
+		}
+		if (this.filtri && Object.keys(this.filtri).length) {
+			await insertIntoTable(modelsMap.IzdelekFilter, this.filtri);
 		}
 	}
 
