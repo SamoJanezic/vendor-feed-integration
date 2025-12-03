@@ -1,29 +1,23 @@
 import { createTable } from "../db/sql.js";
-import { Izdelek } from "../Models/Izdelek.js";
-import { IzdelekDobavitelj } from "../Models/IzdelekDobavitelj.js";
-import { insertCategories } from "../Seeders/insertCategories.js";
-import { Dobavitelj } from "../Models/Dobavitelj.js"
-import { Komponenta } from "../Models/Komponenta.js";
-import { Atribut } from "../Models/Atribut.js";
-import { Slika } from "../Models/Slika.js";
-import { Kategorija } from "../Models/Kategorija.js";
+import { modelsMap } from "../Models/index.js";
 
 const tables = [
-    // Kategorija,
-    Dobavitelj,
-    Izdelek,
-    Komponenta,
-    IzdelekDobavitelj,
-    Atribut,
-    Slika,
+    // modelsMap.Kategorija,
+    // modelsMap.Filter,
+    modelsMap.IzdelekFilter,
+    modelsMap.Dobavitelj,
+    modelsMap.Izdelek,
+    modelsMap.Komponenta,
+    modelsMap.IzdelekDobavitelj,
+    modelsMap.Atribut,
+    modelsMap.Slika,
 ];
 
 
 async function up() {
-	tables.forEach((table) => {
-	    createTable(table);
-	});
-    insertCategories();
+    for (const table of tables) {
+        await createTable(table);
+    }
 }
 
-up()
+up();
