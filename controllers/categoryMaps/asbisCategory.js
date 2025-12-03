@@ -73,7 +73,7 @@ const asbisCategoryMap = {
 	[cn.SERVER]: ["Server Desktop", "Main Board Server"],
 	[cn.CPU]: ["CPU Desktop"],
 	[cn.KONF_OPREMA]: ["Video Conferencing Solution"],
-	[cn.SOFTWARE]: ["Software Electronic Keys", "Soft OEM. MS OS for PC"],
+	[cn.SOFTWARE]: ["Software Electronic Keys", "Soft OEM. MS OS for PC", "Soft in box. MS Application"],
 	[cn.MONITOR]: ["Zaslon velikega formata", "LED monitor"],
 	[cn.MINI_PC]: ["PC NetTop", "PC Barebone"],
 	[cn.PSU]: ["Power Supply Unit"],

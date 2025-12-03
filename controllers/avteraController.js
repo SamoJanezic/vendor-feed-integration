@@ -50,9 +50,12 @@ export default class AvteraController extends DobaviteljController {
 		"Grafične kartice",
 		"Zobne ščetke in prhe",
 		"Sprehajalne steze",
-		"Igralni pripomočki",
 		"Kalkulatorji",
-		"Potovalni kovčki"
+		"Potovalni kovčki",
+        "Mobilna telefonija",
+        "Prenosne polnilne baterije",
+        "Mikrofoni",
+        "Medijski predvajalniki"
 	]);
 
 	exceptions(param) {

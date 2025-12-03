@@ -21,6 +21,7 @@ const avteraCategoryMap = {
 		"Dodatki za računalnike",
 		"Torbice in ovitki za tablice",
 		"Dodatki za tablice",
+        "Nahrbtniki",
 	],
 	[cn.SESALEC]: ["Sesalci"],
 	[cn.SCANNER]: ["Čitalniki"],
@@ -66,10 +67,12 @@ const avteraCategoryMap = {
 	[cn.URE]: ["Nosljive naprave"],
 	[cn.RADIATOR]: ["Električna ogrevala"],
 	[cn.KEY]: ["Varnostni ključi"],
-	[cn.PRALNO_SUŠILNI]: ["Pralno-sušilni stroji"],
+	[cn.PRALNO_SUŠILNI]: ["Pralno-sušilni stroji", "Pralno Sušilni Stroji"],
 	[cn.KLIMA]: ["Klimatske naprave"],
 	[cn.RADIO]: ["Avdio"],
     [cn.N_ACC]: ["Masažni aparati", "Zobne ščetke, prhe, brivniki in sušilci"],
+    [cn.Z_VLAZILEC]: ["Vlažilci in razvlaževalci"],
+    [cn.Z_RAZVLAZILEC]: ["Čistilniki zraka"],
 };
 
 export default avteraCategoryMap;

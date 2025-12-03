@@ -1,10 +1,10 @@
 import DobaviteljController from "./DobaviteljController.js";
 
 export default class AsbisController extends DobaviteljController {
-	constructor(categoryMap, attribute, ...args) {
+	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
 		this.categoryMap = categoryMap;
-		this.attribute = attribute;
+		this.Attributes = Attributes;
 	}
 	name = "asbis";
 	file = [
@@ -201,11 +201,11 @@ export default class AsbisController extends DobaviteljController {
 		this.slika = slike;
 	}
 
-	executeAll() {
-		this.createDataObject();
-		this.sortCategories();
-		this.splitSlike();
-		this.splitDodatneLastnosti();
-		this.insertDataIntoDb();
-	}
+	// executeAll() {
+	// 	this.createDataObject();
+	// 	this.sortCategories();
+	// 	this.splitSlike();
+	// 	this.splitDodatneLastnosti();
+	// 	this.insertDataIntoDb();
+	// }
 }

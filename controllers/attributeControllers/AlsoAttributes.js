@@ -9,9 +9,28 @@ class AlsoAttributes {
         return match ? match[0].replace(/\s?/, " ") : text;
     }
 
+    static extractPanelType(title) {
+        const lower = title.toLowerCase();
+
+        if (lower.includes("oled")) return "OLED";
+        if (lower.includes("lcd")) return "LCD";
+        if (lower.includes("qled")) return "QLED";
+        return "Unknown";
+    }
+
     static extractScreenSize(text) {
         const match = text.match(/\b\d+(\.\d+)?"/);
         return match ? match[0].replace(',', '.') : text;
+    }
+
+    static tabScreenSize(text) {
+        if (!text || typeof text !== "string") return null;
+
+        // Matches: 10,5-palčni / 11 palčni / 12-palčni etc.
+        const match = text.match(/(\d+(?:,\d+)?)\s*[-\s]*palčni/i);
+        if (!match) return null;
+
+        return `${match[1]}"`; // keep comma and add inch symbol
     }
 
     static extractResolution(text) {
@@ -20,17 +39,28 @@ class AlsoAttributes {
     }
 
     static replaceVat(text) {
-        return text.replace(/\b(vatov?|wattov?|watt|vat|w)\b/gi, 'W').replace(/\s+W/, ' W').trim();
+        return text
+        .replace(/\b(vatov?|wattov?|watt|vat|w)\b/gi, 'W')
+        .replace(/(\d)\s*W\b/gi, '$1 W')
+        .trim();
     }
 
     static defaultHandler(el) {
         return { [el['@_name']]: el['#text'] };
     }
 
+    static extractDDR(value) {
+        if (!value || typeof value !== "string") return null;
+
+        const match = value.toUpperCase().match(/\bDDR[1-7]\b/);
+        return match ? match[0] : null;
+    }
+
     formatAttributes() {
         if (!this.attribute || !this.attribute.length) return {};
 
         const attributes = {};
+        const filterData = {}
 
         // if(this.category === 'Prenosniki') {
         //     console.log(this.attribute);
@@ -108,7 +138,7 @@ class AlsoAttributes {
                 Procesor: el => ({ Procesor: el['#text'] }),
                 Prikaz: el => {
                     const res = {};
-                    if (el['#text'].includes('dotik')) res['Vrsta zaslona'] = 'Touch';
+                    // if (el['#text'].includes('dotik')) res['Vrsta zaslona'] = 'Touch';
                     const size = AlsoAttributes.extractScreenSize(el['#text']);
                     if (size) res['Velikost zaslona'] = size;
                     const resol = el['#text'].match(/\b\d{3,4}\s?[x×]\s?\d{3,4}\b/i);
@@ -127,7 +157,7 @@ class AlsoAttributes {
             },
             Pomnilniki: {
                 Zmogljivost: el => ({ 'Kapaciteta pomnilnika': el['#text'] }),
-                'Vrsta pomnilnika': el => ({ 'Vrsta pomnilnika': el['#text'] }),
+                'Vrsta pomnilnika': el => ({ 'Vrsta pomnilnika': AlsoAttributes.extractDDR(el['#text']) }),
             },
             'Trdi diski': {
                 Zmogljivost: el => ({ 'Kapaciteta diska': el['#text'] }),
@@ -150,13 +180,13 @@ class AlsoAttributes {
                 'Vrsta kartuše': el => ({ Vrsta: 'Kartuša' }),
                 Kompleti: el => ({ Vrsta: 'Kartuša' }),
                 'Format papirja': el => ({ Vrsta: 'Papir' }),
-                'Kapaciteta': el => ({ 'Kapaciteta strani': el['#text'] }),
+                // 'Kapaciteta': el => ({ 'Kapaciteta strani': el['#text'] }),
             },
             Televizije: {
                 Peron: el => ({ 'Smart TV': 'Da', 'Operacijski sistem': el['#text'] }),
                 Resolucija: el => ({ 'Ločljivost': el['#text'] }),
                 'Velikost diagonale': el => ({ Diagonala: el['#text'] }),
-                'Vrsta izdelka': el => ({ 'Vrsta Zaslona': el['#text'] }),
+                'Vrsta izdelka': el => ({ 'Vrsta zaslona': AlsoAttributes.extractPanelType(el['#text']) }),
             },
             'Domači kino': {
                 'Neprekinjena moč': el => ({ Moč: el['#text'] }),
@@ -187,11 +217,16 @@ class AlsoAttributes {
         this.attribute.forEach(el => {
             const name = el['@_name'];
             const handler = handlers[name];
-            const result = handler ? handler(el) : AlsoAttributes.defaultHandler(el);
-            Object.assign(attributes, result);
+
+            if (handler) {
+				const result = handler(el);
+				Object.assign(filterData, result);
+			} else {
+                Object.assign(attributes, AlsoAttributes.defaultHandler(el));
+			}
         });
 
-        return attributes;
+        return { filterData, attributes };
     }
 }
 

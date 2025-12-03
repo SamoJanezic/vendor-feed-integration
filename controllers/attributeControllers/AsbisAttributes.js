@@ -17,6 +17,7 @@ class AsbisAttributes {
         if (!this.attribute || !this.attribute.length) return {};
 
         const attributes = {};
+        const filterData = {};
 
         const attributeHandlers = {
             'Dodatki za prenosnike': {
@@ -50,8 +51,8 @@ class AsbisAttributes {
             },
             'Grafične kartice': {
                 'Nabor grafičnih čipov': el => ({ 'Grafični procesor': el['@_Value'] }),
-                'Zmogljivost vgrajenega video pomnilnika': el => ({ 'Kapaciteta pomnilnika': el['@_Value'] }),
-                'Vrsta pomnilnika': el => ({ 'Vrsta pomnilnika': el['@_Value'] }),
+                'Zmogljivost vgrajenega video pomnilnika': el => ({ 'Pomnilnik': el['@_Value'] }),
+                // 'Vrsta pomnilnika': el => ({ 'Vrsta pomnilnika': el['@_Value'] }),
             },
             'Osnovne plošče': {
                 'Podprti procesorji': el => ({ 'Vrsta procesorja': el['@_Value'].replaceAll(' <br/>', ', ') }),
@@ -102,8 +103,8 @@ class AsbisAttributes {
                 'Vrsta zaslona': el => ({ 'Vrsta zaslona': el['@_Value'] }),
             },
             'Optične enote': {
-                'Vrsta diskovnega pogona': el => ({ 'Vrsta': el['@_Value'] }),
-                'Lokacija naprave': el => ({ 'Tip': el['@_Value'] }),
+                'Vrsta diskovnega pogona': el => ({ 'Vrsta optične enote': el['@_Value'] }),
+                'Lokacija naprave': el => ({ 'Tip optične enote': el['@_Value'] }),
             },
             Ohišja: {
                 'Tip matične plošče': el => ({ 'Velikost': el['@_Value'] }),
@@ -120,17 +121,23 @@ class AsbisAttributes {
         this.attribute.forEach(el => {
             const name = el['@_Name'];
             const handler = handlers[name];
-            let result = handler ? handler(el) : AsbisAttributes.defaultHandler(el);
+            // let result = handler ? handler(el) : AsbisAttributes.defaultHandler(el);
 
             // Special case for Slušalke: set 'Povezava' to 'Žične' if not set
             if (this.category === 'Slušalke' && !attributes['Povezava'] && name !== 'Brezžična tehnologija') {
                 attributes['Povezava'] = 'Žične';
             }
 
-            Object.assign(attributes, result);
+            if (handler) {
+                const result = handler(el);
+                Object.assign(filterData, result);
+            } else {
+                Object.assign(attributes, AsbisAttributes.defaultHandler(el));
+            }
+            // Object.assign(attributes, result);
         });
 
-        return attributes;
+        return { attributes, filterData };
     }
 }
 

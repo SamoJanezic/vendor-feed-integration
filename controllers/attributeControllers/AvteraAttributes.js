@@ -31,6 +31,7 @@ class AvteraAttributes {
 
         if (!this.attribute?.length) return null;
         const attributes = {};
+        const filterData = {};
 
         const attributeHandlers = {
             Prenosniki: {
@@ -86,7 +87,7 @@ class AvteraAttributes {
                     return res ? { 'Ločljivost': res } : {};
                 },
                 'Pomnilnik RAM': el => ({ 'Kapaciteta pomnilnika': el['#text'] }),
-                'Pomnilnik FLASH': el => ({ 'Kapaciteta diska': el['#text'] }),
+                'Pomnilnik FLASH': el => ({ 'ROM': el['#text'] }),
                 'Operacijski sistem': el => ({ 'Operacijski sistem': el['#text'] }),
             },
             Pomnilniki: {
@@ -102,7 +103,7 @@ class AvteraAttributes {
             Tiskalniki: {
                 'Ločljivost tiskanja': el => ({ 'Ločljivost tiska': el['#text'] }),
                 'Tehnologija tiskanja': el => ({ 'Tehnologija tiska': el['#text'] }),
-                'Hitrost tiskanja': el => ({ 'Hitrost tiskanja': el['#text'] }),
+                // 'Hitrost tiskanja': el => ({ 'Hitrost tiskanja': el['#text'] }),
             },
             'Potrošni material': {
                 'Vrsta kartuše': el => ({ 'Vrsta': 'Kartuša' }),
@@ -116,14 +117,14 @@ class AvteraAttributes {
                     return res ? { 'Ločljivost': res } : {};
                 },
                 'Diagonala zaslona': el => ({ 'Diagonala': AvteraAttributes.extractScreenSize(el['#text']) }),
-                'Tip  zaslona': el => ({ 'Vrsta Zaslona': el['#text'] }),
+                'Tip  zaslona': el => ({ 'Vrsta zaslona': el['#text'] }),
             },
             'Domači kino': {
                 'Izhodna moč zvočnika': el => ({ 'Moč': el['#text'] }),
-                'Povezave': el => ({ 'Priključki': el['#text'] }),
-                'Tip  zaslona': el => ({ 'Vrsta Zaslona': el['#text'] }),
-                'Zvočni sistem': el => ({ 'Zvočni sistem': el['#text'] }),
-                'Globokotonski zvočnik': el => ({ 'Globokotonski zvočnik': el['#text'] }),
+                'Povezave': el => ({ 'Povezljivost': el['#text'] }),
+                // 'Tip  zaslona': el => ({ 'Vrsta Zaslona': el['#text'] }),
+                // 'Zvočni sistem': el => ({ 'Zvočni sistem': el['#text'] }),
+                // 'Globokotonski zvočnik': el => ({ 'Globokotonski zvočnik': el['#text'] }),
             },
             Projektorji: {
                 'Ločljivost': el => ({ 'Ločljivost': el['#text'] }),
@@ -133,18 +134,18 @@ class AvteraAttributes {
                 'Tehnologija': el => ({ 'Tehnologija': el['#text'] }),
             },
             'Pralni stroji': {
-                'Zmogljivost pranja': el => ({ 'Kapaciteta bobna': el['#text'] }),
+                'Zmogljivost pranja': el => ({ 'Kapaciteta': el['#text'] }),
                 'Razred energijske učinkovitosti pranja': el => ({ 'Energijski razred': el['#text'] }),
                 'Največja hitrost ožemanja': el => ({ 'št. Obratov centrifuge': el['#text'] }),
                 'Inverter motor': el => ({ 'Inverter motor': el['#text'] }),
             },
             'Sušilni stroji': {
-                'Zmogljivost sušenja': el => ({ 'Kapaciteta bobna': el['#text'] }),
+                'Zmogljivost sušenja': el => ({ 'Kapaciteta': el['#text'] }),
                 'Razred energijske učinkovitosti sušenja': el => ({ 'Energijski razred': el['#text'] }),
                 'Toplotna črpalka': el => ({ 'Toplotna črpalka': el['#text'] }),
                 'Inverter motor': el => ({ 'Inverter motor': el['#text'] }),
             },
-            'Pralno-sušilni stroji': {
+            'Pralno Sušilni Stroji': {
                 'Zmogljivost pranja': el => ({ 'Kapaciteta pranja': el['#text'] }),
                 'Zmogljivost sušenja': el => ({ 'Kapaciteta sušenja': el['#text'] }),
                 'Razred energijske učinkovitosti pranja in sušenja': el => ({ 'Energijski razred pranja': el['#text'] }),
@@ -155,7 +156,7 @@ class AvteraAttributes {
                 'Mere (Š x V x G)': el => AvteraAttributes.extractDimensions(el['#text']),
                 'Namestitev': el => ({ 'Tip': el['#text'] }),
                 'Število pogrinjkov': el => ({ 'Število pogrinjkov': el['#text'] }),
-                'Zaščita pred izlivom vode': el => ({ 'Aqua stop': 'Da' }),
+                'Zaščita pred izlivom vode': el => ({ 'Aqua Stop': 'Da' }),
                 'Zlaganje pribora': el => el['#text'] === 'Predal' ? { 'Tretja košara': 'Da' } : {},
                 'Energetski razred': el => ({ 'Energijski razred': el['#text'] }),
             },
@@ -167,11 +168,11 @@ class AvteraAttributes {
                 'Višina dodatno': el => ({ 'Višina': el['#text'] }),
             },
             Zamrzovalniki: {
-                'Vrsta zmrzovalne skrinje': el => ({ 'Vrsta': el['#text'] }),
+                'Vrsta zmrzovalne skrinje': el => ({ 'Tip': el['#text'] }),
                 'Energetski razred': el => ({ 'Energijski razred': el['#text'] }),
                 'Samodejno odtajevanje': el => ({ 'No frost': el['#text'] }),
                 'Višina dodatno': el => ({ 'Višina': el['#text'] }),
-                'Prostornina zmrzovalnika dodatno': el => ({ 'Prostornina zmrzovalnika': el['#text'] }),
+                'Prostornina zmrzovalnika dodatno': el => ({ 'Prostornina': el['#text'] }),
                 'Mere (Š x V x G)': el => AvteraAttributes.extractDimensions(el['#text']),
             },
             Pečice: {
@@ -182,12 +183,12 @@ class AvteraAttributes {
                     const dimenzije = el['#text'].match(/\d+/g);
                     return dimenzije ? { 'Višina': dimenzije[1] } : {};
                 },
-                'Način čiščenja': el => ({ 'Način čiščenja': el['#text'] }),
+                'Način čiščenja': el => ({ 'Čiščenje': el['#text'] }),
             },
             Kuhališča: {
                 'Namestitev kuhalne plošče': el => ({ 'Tip': el['#text'] }),
                 'Število kuhališč': el => ({ 'Število kuhališč': el['#text'] }),
-                'Vrsta kuhalne plošče': el => ({ 'Vrsta kuhalne plošče': el['#text'] }),
+                'Vrsta kuhalne plošče': el => ({ 'Vrsta okvirja': el['#text'] }),
                 'Širina dodatno': el => ({ 'Širina': el['#text'] }),
             },
             Nape: {
@@ -205,11 +206,17 @@ class AvteraAttributes {
         this.attribute.forEach(el => {
             const name = el['@_naziv'];
             const handler = handlers[name];
-            const result = handler ? handler(el) : AvteraAttributes.defaultHandler(el);
-            Object.assign(attributes, result);
+            // const result = handler ? handler(el) : AvteraAttributes.defaultHandler(el);
+            // Object.assign(attributes, result);
+            if (handler) {
+				const result = handler(el);
+				Object.assign(filterData, result);
+			} else {
+                Object.assign(attributes, AvteraAttributes.defaultHandler(el));
+			}
         });
 
-        return attributes;
+        return {attributes, filterData};
     }
 }
 
