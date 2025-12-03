@@ -87,7 +87,7 @@ const categories = [
 	},
 	{
 		kategorija_id: 38,
-		kategorija: "NAS sisitemi",
+		kategorija: "NAS sistemi",
 		stars_id: 17,
 		stars_ime: "Računalništvo",
 		marza: null,
@@ -487,7 +487,7 @@ const categories = [
 	},
 	{
 		kategorija_id: 279,
-		kategorija: "Mrežne kartice, antene, WIFI ojačevalci",
+		kategorija: "Mrežne kartice, Antene, WIFI Ojačevalci",
 		stars_id: 41,
 		stars_ime: "Mrežna oprema",
 		marza: null,
@@ -541,6 +541,13 @@ const categories = [
 		stars_ime: "Zunanje naprave",
 		marza: null,
 	},
+    {
+        kategorija_id: 90,
+        kategorija: "Podloge",
+        stars_id: 43,
+        stars_ime: "Zunanje naprave",
+        marza: null,
+    },
     {
         kategorija_id: 100,
         kategorija: "Kompleti",
@@ -639,20 +646,13 @@ const categories = [
 		stars_ime: "Video nadzor",
 		marza: null,
 	},
-	// {
-	// 	kategorija_id: 285,
-	// 	kategorija: "Monitorji",
-	// 	stars_id: 49,
-	// 	stars_ime: "Video nadzor",
-	// 	marza: null,
-	// },
-    // {
-    //     kategorija_id: 286,
-    //     kategorija: "Nosilci in napajalniki",
-    //     stars_id: 49,
-    //     stars_ime: "Video nadzor",
-    //     marza: null
-    // },
+    {
+        kategorija_id: 286,
+        kategorija: "Nosilci in napajalniki",
+        stars_id: 49,
+        stars_ime: "Video nadzor",
+        marza: null
+    },
 	{
 		kategorija_id: 106,
 		kategorija: "Pralni stroji",
