@@ -14,7 +14,7 @@ const acordCategoryMap = {
 	[cn.Z_RAZVLAZILEC]: ["Čistilci zraka"],
 	[cn.P_VRT]: ["Krmilniki"],
 	[cn.KONF_OPREMA]: ["Interaktivna oprema"],
-	[cn.PC]: ["Namizni - desktop", "Dodatna interaktivna oprema", "Računalniki"],
+	[cn.PC]: ["Namizni - desktop", "Računalniki", "Namizni računalniki"],
 	[cn.LAPTOP]: ["Prenosni - notebook"],
 	[cn.NAS]: ["NAS strežniki"],
 	[cn.SERVER]: ["Strežniki- server"],

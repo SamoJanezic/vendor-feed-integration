@@ -77,6 +77,8 @@ export default class AcordController extends DobaviteljController {
 		"Interaktivni zasloni",
 		"Powerbank baterije",
 		"Dodatna oprema",
+        "Dodatna interaktivna oprema",
+        "Mikrofoni",
 	]);
 
 	exceptions(param) {
