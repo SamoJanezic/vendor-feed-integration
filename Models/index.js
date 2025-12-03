@@ -5,6 +5,8 @@ import { Kategorija } from "./Kategorija.js";
 import { Slika } from "./Slika.js";
 import { Komponenta } from "./Komponenta.js";
 import { Atribut } from "./Atribut.js";
+import { Filter } from "./Filter.js";
+import { IzdelekFilter } from "./IzdelekFilter.js";
 
 export const modelsMap = {
 	IzdelekDobavitelj,
@@ -14,4 +16,6 @@ export const modelsMap = {
 	Slika,
 	Komponenta,
 	Atribut,
+    Filter,
+    IzdelekFilter,
 }
