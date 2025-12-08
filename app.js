@@ -4,18 +4,18 @@ import { attributesMap } from "./controllers/attributeControllers/index.js";
 
 // Safe runner for controllers
 async function runController(name, ControllerClass, category, attributes) {
-    try {
+    // try {
         const instance = new ControllerClass(category, attributes);
         await instance.executeAll();
         console.log(`Finished controller: ${name}`);
-    } catch (err) {
-        console.warn(`Controller "${name}" failed: ${err.message}`);
-    }
+    // } catch (err) {
+        // console.warn(`Controller "${name}" failed: ${err.message}`);
+    // }
 }
 
 export async function executeAll() {
     for (const [key, loader] of Object.entries(controllerMap)) {
-        try {
+        // try {
             // Lazy-load controller class
             const { default: ControllerClass } = await loader();
             const category = categoryMap[key];
@@ -24,9 +24,9 @@ export async function executeAll() {
             console.log(`Running controller: ${key}`);
             await runController(key, ControllerClass, category, attributes);
 
-        } catch (err) {
-            console.warn(`Failed to load controller "${key}": ${err.message}`);
-        }
+        // } catch (err) {
+            // console.warn(`Failed to load controller "${key}": ${err.message}`);
+        // }
     }
 }
 
