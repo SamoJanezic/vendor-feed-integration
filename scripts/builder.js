@@ -1,6 +1,6 @@
 import fsp from "fs/promises";
 import { XMLBuilder } from "fast-xml-parser";
-import { getIzdelekInfo, getAtributInfo, getSlikaInfo } from "../db/sql.js";
+import { getIzdelekInfo, getAtributInfo, getSlikaInfo, getFilterInfo } from "../db/sql.js";
 
 // Configure XML builder
 const parser = new XMLBuilder({
@@ -23,14 +23,23 @@ async function createBody(el) {
 	const izdelekId = `softT${el.id}`;
 	const atributInfo = await getAtributInfo(el.ean);
 	const slike = await getSlikaInfo(el.ean);
+    const filterInfo = await getFilterInfo(el.ean);
 
-const dodatneLastnosti = {
-  lastnost: atributInfo[0].map(attr => ({
-    '@_naziv': attr.komponenta,
-    '@_id': attr.komponenta_id,
-    cdata: attr.atribut || "",
-  }))
-};
+    const dodatneLastnosti = {
+        lastnost: atributInfo[0].map(attr => ({
+            '@_naziv': attr.komponenta,
+            '@_id': attr.komponenta_id,
+            cdata: attr.atribut || "",
+        }))
+    };
+
+    const atributi = {
+        lastnost: filterInfo.map(f => ({
+            '@_naziv': f.naziv,
+            '@_id': f.filter_id,
+            cdata: f.value || "",
+        }))
+    };
 
 	let count = 1;
 	const dodatneSlike = {};
@@ -77,6 +86,7 @@ const dodatneLastnosti = {
 		dobava: { "@_id": el.zaloga === "Na zalogi" ? 1 : 0, cdata: el.zaloga },
 		spletnaStranProizvajalca: { cdata: el.spletnaStranProizvajalca || "" },
 		dodatneLastnosti,
+        atributi,
 		dodatneSlike,
 	};
 }
