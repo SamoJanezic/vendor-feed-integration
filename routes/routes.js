@@ -2,6 +2,7 @@ import express from "express";
 import { modelsMap } from "../models/index.js";
 import "../models/associations.js";
 import sequelize from "sequelize";
+import filterCallRoutes from "./filterCalls.js";
 
 const router = express.Router();
 
@@ -13,8 +14,12 @@ const models = {
 	Komponente: modelsMap.Komponenta,
 	Atribut: modelsMap.Atribut,
 	Dobavitelj: modelsMap.Dobavitelj,
+    Filter: modelsMap.Filter,
+    IzdelekFilter: modelsMap.IzdelekFilter
 };
 
+
+router.use("/filters", filterCallRoutes);
 router.get("/getData", async (req, res) => {
 	try {
 		const table = req.headers.table;
@@ -66,6 +71,16 @@ router.get("/getSingle", async (req, res) => {
 						},
 					],
 				},
+                {
+                    model: models.IzdelekFilter,
+                    attributes: ["filter_vrednost"],
+                    include: [
+                        {
+                            model: models.Filter,
+                            attributes:['filter_naziv'],
+                        }
+                    ]
+                }
 			],
 		});
 

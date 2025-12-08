@@ -12,9 +12,9 @@ const bshCategoryMap = {
 	[cn.K_PECICA]: ["Kombinirana parna pečica", "Pečica"],
 	[cn.K_PLOSCA]: [
 		"Kuhalna plošča",
-		"Štedilnik",
 		"Modularna kuhalna plošča",
 	],
+    [cn.K_STEDILNIK]: ["Štedilnik"],
 	[cn.MESALNIK]: [
 		"Mešalni stroj",
 		"Nastavek za mešanje",

@@ -112,7 +112,7 @@ class AlsoAttributes {
                 'SSD pogon': el => ({ 'Kapaciteta diska': el['#text'] }),
                 'Sistem za operacijski sistem': el => ({ 'Operacijski sistem': el['#text'] }),
             },
-            'All in one': {
+            'All in One': {
                 Procesor: el => ({ Procesor: el['#text'] }),
                 'Grafični krmilnik': el => ({ 'Grafična kartica': el['#text'] }),
                 Monitor: el => {

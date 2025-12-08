@@ -32,6 +32,9 @@ class AvteraAttributes {
         if (!this.attribute?.length) return null;
         const attributes = {};
         const filterData = {};
+        // if (this.category === "Optični bralniki") {
+        //     console.log(this.attribute);
+        // }
 
         const attributeHandlers = {
             Prenosniki: {
@@ -104,6 +107,14 @@ class AvteraAttributes {
                 'Ločljivost tiskanja': el => ({ 'Ločljivost tiska': el['#text'] }),
                 'Tehnologija tiskanja': el => ({ 'Tehnologija tiska': el['#text'] }),
                 // 'Hitrost tiskanja': el => ({ 'Hitrost tiskanja': el['#text'] }),
+            },
+            "Optični bralniki": {
+                //Tip bralnika	Hitrost branja	Povezava	Duplex	Format
+                'Tip čitalnika': el => ({'Tip bralnika': el['#text']}),
+                'Hitrost skeniranja': el => ({'Hitrost branja': el['#text']}),
+                'Povezljivost': el => ({'Povezava': el['#text']}),
+                'Avtomatsko obojestransko skeniranje': el => ({'Duplex': el['#text']}),
+                'Maksimalna dimenzija skeniranja': el => ({'Format': el['#text']}),
             },
             'Potrošni material': {
                 'Vrsta kartuše': el => ({ 'Vrsta': 'Kartuša' }),

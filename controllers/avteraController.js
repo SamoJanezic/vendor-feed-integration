@@ -55,7 +55,8 @@ export default class AvteraController extends DobaviteljController {
         "Mobilna telefonija",
         "Prenosne polnilne baterije",
         "Mikrofoni",
-        "Medijski predvajalniki"
+        "Medijski predvajalniki",
+        "Dodatki za strežnike",
 	]);
 
 	exceptions(param) {

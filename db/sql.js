@@ -1,5 +1,6 @@
 import { db } from "./db.js";
 import { modelsMap } from "../models/index.js";
+import "../models/associations.js";
 
 export function createTable(tableName) {
 	tableName
@@ -126,6 +127,28 @@ export async function getSlikaInfo(ean) {
 		},
 		raw: true,
 	});
+}
+
+export async function getFilterInfo(ean) {
+    const filterValues = await modelsMap.IzdelekFilter.findAll({
+        where: { izdelek_ean: ean },
+        include: [
+            {
+                model: modelsMap.Filter,
+                attributes: ['filter_id', 'filter_naziv'],
+                required: true, // only include rows that have a matching Filter
+            }
+        ]
+    });
+
+    const formatted = filterValues.map(fd => ({
+        ean: fd.izdelek_ean,
+        filter_id: fd.Filter.filter_id,
+        naziv: fd.Filter.filter_naziv,
+        value: fd.filter_vrednost
+    }));
+
+    return formatted;
 }
 
 export async function upsertTable(tableName, allData) {

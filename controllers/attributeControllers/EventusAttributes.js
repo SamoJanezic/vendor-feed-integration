@@ -52,9 +52,9 @@ class EventusAttributes {
         const attributes = {};
         const filterData = {};
 
-        if (this.category === 'Tablični računalniki') {
-            console.log(this.attribute)
-        }
+        // if (this.category === 'Tablični računalniki') {
+        //     console.log(this.attribute)
+        // }
 
         const attributeHandlers = {
             'Grafične kartice': {

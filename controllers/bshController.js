@@ -1,10 +1,15 @@
 import { xmlParser } from "./parseController.js";
 import DobaviteljController from "./DobaviteljController.js";
+import {
+	categoryLookup,
+	filterLookup,
+} from "../services/filters/filterIdMap.js";
 
 export default class BshController extends DobaviteljController {
-	constructor(categoryMap, ...args) {
+	constructor(categoryMap, Attributes, ...args) {
 		super(...args);
-		this.categoryMap = categoryMap
+		this.categoryMap = categoryMap;
+		this.Attributes = Attributes;
 	}
 	name = "bosch";
 	file = [
@@ -36,10 +41,10 @@ export default class BshController extends DobaviteljController {
 
 	combineData() {
 		const [opisi, cene] = this.getData();
-		return opisi.flatMap(
-			opis => cene
-			.filter(cena=> opis.PIData.EANArticleCode === cena.ean)
-			.map(cena => ({ ...opis, ...cena}))
+		return opisi.flatMap((opis) =>
+			cene
+				.filter((cena) => opis.PIData.EANArticleCode === cena.ean)
+				.map((cena) => ({ ...opis, ...cena }))
 		);
 		return combinedData;
 	}
@@ -50,11 +55,12 @@ export default class BshController extends DobaviteljController {
 		const otherData = product?.OtherData || {};
 
 		// helper lookups
-		const findPropertyByName = name =>
-			properties.find(p => p?.["@_name"] === name)?.["#text"] ?? null;
+		const findPropertyByName = (name) =>
+			properties.find((p) => p?.["@_name"] === name)?.["#text"] ?? null;
 
-		const findPropertyByDescription = desc =>
-			properties.find(p => p?.["@_description"] === desc)?.["#text"] ?? null;
+		const findPropertyByDescription = (desc) =>
+			properties.find((p) => p?.["@_description"] === desc)?.["#text"] ??
+			null;
 
 		// mapping of field names to their processors
 		const handlers = {
@@ -65,11 +71,15 @@ export default class BshController extends DobaviteljController {
 			dodatne_slike: () => {
 				const assets = otherData?.Assets?.Asset ?? [];
 				return assets
-					.filter(a => a?.AssetProperty?.[0]?.["#text"] === "additional picture")
-					.flatMap(a =>
-						a.AssetProperty
-							.filter(p => p?.["@_name"] === "identifier")
-							.map(p => p["#text"])
+					.filter(
+						(a) =>
+							a?.AssetProperty?.[0]?.["#text"] ===
+							"additional picture"
+					)
+					.flatMap((a) =>
+						a.AssetProperty.filter(
+							(p) => p?.["@_name"] === "identifier"
+						).map((p) => p["#text"])
 					);
 			},
 			dodatne_lastnosti: () => properties,
@@ -82,13 +92,13 @@ export default class BshController extends DobaviteljController {
 			},
 			zaloga: () => this.formatZaloga(product?.zaloga),
 			cena_nabavna: () => product?.cena?.replace(",", ".") ?? null,
-			ppc: () => product?.ppc?.replace(",", ".") ?? null
+			ppc: () => product?.ppc?.replace(",", ".") ?? null,
 		};
 
 		obj[field] = handlers[field]?.() ?? product[key] ?? null;
+
 		return obj;
 	}
-
 
 	exceptions(param) {
 		const ignoreCategory = [
@@ -110,8 +120,10 @@ export default class BshController extends DobaviteljController {
 	sortCategories() {
 		const flatCategoryMap = {};
 
-		for (const [newCategory, oldCategories] of Object.entries(this.categoryMap)) {
-			oldCategories.forEach(old => {
+		for (const [newCategory, oldCategories] of Object.entries(
+			this.categoryMap
+		)) {
+			oldCategories.forEach((old) => {
 				flatCategoryMap[old] = newCategory;
 			});
 		}
@@ -156,6 +168,65 @@ export default class BshController extends DobaviteljController {
 		});
 	}
 
+	processLastnosti() {
+		this.filtri = this.filtri || [];
+		this.atribut = this.atribut || [];
+
+		this.allData.forEach((data) => {
+			if (!data.dodatne_lastnosti || data.dodatne_lastnosti.length === 0)
+				return;
+
+			// ensure lastnosti is always an array
+			const lastnosti = Array.isArray(data.dodatne_lastnosti)
+				? data.dodatne_lastnosti
+				: Array.isArray(data.dodatne_lastnosti?.lastnost)
+				? data.dodatne_lastnosti.lastnost
+				: [];
+
+			// remove "noData" entries
+			const filteredLastnosti = lastnosti.filter(
+				(el) => el["#text"] !== "noData"
+			);
+
+			if (!filteredLastnosti.length) return;
+
+			// Parse attributes and filters
+			const attrResult =
+				new this.Attributes(
+					data.kategorija,
+					filteredLastnosti
+				).formatAttributes() || {};
+			const attributes = attrResult.attributes || {};
+			const filterData = attrResult.filterData || {};
+
+			Object.entries(attributes).forEach(([naziv, vrednost]) => {
+				this.atribut.push({
+					izdelek_ean: data.ean,
+					KOMPONENTA_komponenta: naziv,
+					atribut: vrednost,
+				});
+			});
+
+			// Map filters
+			Object.entries(filterData).forEach(([naziv, vrednost]) => {
+				const kategorija_id = categoryLookup[data.kategorija]; // get category id
+				const filter_id = filterLookup[kategorija_id]?.[naziv] || null; // get filter id
+
+				if (!filter_id) {
+					console.warn(
+						`Filter ID not found for category "${data.kategorija}" and filter "${naziv}"`
+					);
+				}
+
+				this.filtri.push({
+					izdelek_ean: data.ean,
+					filter_id,
+					filter_vrednost: vrednost,
+				});
+			});
+		});
+	}
+
 	splitSlike() {
 		this.slika = [];
 		this.allData.forEach((data) => {
@@ -193,6 +264,7 @@ export default class BshController extends DobaviteljController {
 		this.createDataObject();
 		this.sortCategories();
 		this.splitDodatneLastnosti();
+		this.processLastnosti();
 		this.splitSlike();
 		this.insertDataIntoDb();
 	}
