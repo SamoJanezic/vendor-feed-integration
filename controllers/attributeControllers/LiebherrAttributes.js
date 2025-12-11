@@ -66,9 +66,8 @@ class LiebherrAttributes {
             if (handler) {
 				const result = handler(el);
 				Object.assign(filterData, result);
-			} else {
-                Object.assign(attributes, LiebherrAttributes.defaultHandler(el));
 			}
+            Object.assign(attributes, LiebherrAttributes.defaultHandler(el));
         });
 
         return { attributes, filterData };

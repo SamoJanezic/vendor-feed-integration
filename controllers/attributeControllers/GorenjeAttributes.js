@@ -208,9 +208,8 @@ class GorenjeAttributes {
             if (handler) {
 				const result = handler(el);
 				Object.assign(filterData, result);
-			} else {
-                Object.assign(attributes, GorenjeAttributes.defaultHandler(el));
 			}
+            Object.assign(attributes, GorenjeAttributes.defaultHandler(el));
         });
 
         return { attributes, filterData };

@@ -32,8 +32,9 @@ class AvteraAttributes {
         if (!this.attribute?.length) return null;
         const attributes = {};
         const filterData = {};
-        // if (this.category === "Optični bralniki") {
+        // if (this.category === "Usmerjevalniki, stikala in AP") {
         //     console.log(this.attribute);
+        //     console.log('------------------------------------------------------------------------------')
         // }
 
         const attributeHandlers = {
@@ -62,7 +63,7 @@ class AvteraAttributes {
                 'Ukrivljen zaslon': el => ({ 'Ukrivljen zaslon': el['#text'] }),
                 'Priključki': el => ({ 'Vhodi': el['#text'] }),
             },
-            'All in one': {
+            'All in One': {
                 'Vrsta procesorja': el => ({ Procesor: el['#text'] }),
                 'Grafična kartica dodatno': el => ({ 'Grafična kartica': el['#text'] }),
                 'Zaslon na dotik': el => el['#text'] === 'Da' ? { 'Vrsta zaslona': 'Da' } : {},
@@ -107,6 +108,13 @@ class AvteraAttributes {
                 'Ločljivost tiskanja': el => ({ 'Ločljivost tiska': el['#text'] }),
                 'Tehnologija tiskanja': el => ({ 'Tehnologija tiska': el['#text'] }),
                 // 'Hitrost tiskanja': el => ({ 'Hitrost tiskanja': el['#text'] }),
+            },
+            "Usmerjevalniki, stikala in AP": {
+                // Vrsta	Hitrost	št. LAN priklopov
+                'Število priključkov žične komunikacije': el => ({ 'št. LAN priklopov': el['#text']}),
+                'Tip stikala': el => ({ 'Vrsta': 'Stikalo' }),
+                'Gigabit LAN hitrost': el => ({ 'Hitrost': el['#text'] === 'Da' ? '1000 Mbps' : null}),
+
             },
             "Optični bralniki": {
                 //Tip bralnika	Hitrost branja	Povezava	Duplex	Format
@@ -222,9 +230,8 @@ class AvteraAttributes {
             if (handler) {
 				const result = handler(el);
 				Object.assign(filterData, result);
-			} else {
-                Object.assign(attributes, AvteraAttributes.defaultHandler(el));
 			}
+            Object.assign(attributes, AvteraAttributes.defaultHandler(el));
         });
 
         return {attributes, filterData};

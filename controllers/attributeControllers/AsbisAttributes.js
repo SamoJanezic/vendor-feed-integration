@@ -19,6 +19,10 @@ class AsbisAttributes {
         const attributes = {};
         const filterData = {};
 
+        if (this.category === "Prenosniki") {
+            console.log(this.attribute);
+        }
+
         const attributeHandlers = {
             'Dodatki za prenosnike': {
                 'Vrsta torbe': el => ({ 'Vrsta dodatka': 'Torba za prenosnike' }),
@@ -131,9 +135,8 @@ class AsbisAttributes {
             if (handler) {
                 const result = handler(el);
                 Object.assign(filterData, result);
-            } else {
-                Object.assign(attributes, AsbisAttributes.defaultHandler(el));
             }
+            Object.assign(attributes, AsbisAttributes.defaultHandler(el));
             // Object.assign(attributes, result);
         });
 

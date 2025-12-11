@@ -133,9 +133,8 @@ class EventusAttributes {
             if (handler) {
 				const result = handler(el);
 				Object.assign(filterData, result);
-			} else {
-                Object.assign(attributes, EventusAttributes.defaultHandler(el));
 			}
+            Object.assign(attributes, EventusAttributes.defaultHandler(el));
         });
 
         return { attributes, filterData };

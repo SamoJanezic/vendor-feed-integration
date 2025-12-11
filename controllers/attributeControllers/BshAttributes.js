@@ -125,9 +125,9 @@ class BshAttributes {
 			if (handler) {
 				const result = handler(el);
 				Object.assign(filterData, result);
-			} else {
-                Object.assign(attributes, BshAttributes.defaultHandler(el));
 			}
+            Object.assign(attributes, BshAttributes.defaultHandler(el));
+
 		});
 
         if (this.category === "Štedilniki") {

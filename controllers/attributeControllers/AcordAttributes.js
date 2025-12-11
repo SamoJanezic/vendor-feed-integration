@@ -34,7 +34,7 @@ class AcordAttributes {
 		if (!this.attribute || !this.attribute.length) return null;
 		const attributes = {};
         const filterData = {};
-        // if (this.category === "Napajalniki") {
+        // if (this.category === "Konferenčna oprema") {
         //     console.log(this.attribute);
         // }
 		const attributeHandlers = {
