@@ -17,9 +17,9 @@
   "type": "module",
   "scripts": {
     "up": "node scripts/up",
-    "build": "node scripts/builder",
+    "build": "node scripts/build",
     "app": "node ./app.js",
-    "update": "node xml-downloader/app.js",
+    "update": "node services/xml-downloader/app.js",
     "seed": "node scripts/seed.js"
   },
   "devDependencies": {
