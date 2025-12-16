@@ -4,6 +4,7 @@ import { XMLBuilder } from "fast-xml-parser";
 import { getIzdelekInfo } from "../../db/sql.js";
 import { createBody } from "./createBody.js";
 import { getCurrentTimestamp } from "./utils.js";
+import xmlCategories from "./xmlCategories.js";
 
 const parser = new XMLBuilder({
 	ignoreAttributes: false,
@@ -12,43 +13,52 @@ const parser = new XMLBuilder({
 });
 
 export async function build() {
-	const file = "xml/build/softtrade.xml";
+	// const file = "xml/build/softtrade.xml";
 	const spinnerChars = ["|", "/", "-", "\\"];
 	let spinnerIndex = 0;
 
 	const spinner = setInterval(() => {
 		process.stdout.write(
-			`\rBuilding XML ${spinnerChars[spinnerIndex++ % spinnerChars.length]}`
+			`\rBuilding XML ${
+				spinnerChars[spinnerIndex++ % spinnerChars.length]
+			}`
 		);
 	}, 200);
 
 	try {
-		console.log("Fetching product list...");
-		const izdelekInfo = await getIzdelekInfo();
+		for (const [mainCategory, subCategories] of Object.entries(
+			xmlCategories
+		)) {
+			console.log(`Fetching product list for ${mainCategory}...`);
+			const izdelekInfo = await getIzdelekInfo(subCategories);
 
-		console.log(`Generating ${izdelekInfo[0].length} product entries...`);
-		const allProducts = await Promise.all(
-			izdelekInfo[0].map(el => createBody(el))
-		);
+			console.log(`Generating ${izdelekInfo.length} product entries...`);
+			const allProducts = await Promise.all(
+				izdelekInfo.map((el) => createBody(el))
+			);
 
-		const rootObj = {
-			podjetje: {
-				"@_id": "Softtrade, Ljutomer",
-				"@_ts": getCurrentTimestamp(),
-				"@_opis_storitve": "",
-				izdelki: { izdelek: allProducts },
-			},
-		};
+			const rootObj = {
+				podjetje: {
+					"@_id": "Softtrade, Ljutomer",
+					"@_ts": getCurrentTimestamp(),
+					"@_opis_storitve": "",
+					izdelki: { izdelek: allProducts },
+				},
+			};
 
-		const fullXml = `<?xml version="1.0" encoding="UTF-8"?>\n` + parser.build(rootObj);
+			const fullXml =
+				`<?xml version="1.0" encoding="UTF-8"?>\n` +
+				parser.build(rootObj);
+
+			const fileName = `xml/build/softtrade_${mainCategory}.xml`;
+			console.log(`Writing XML file: ${fileName}...`);
+			await fsp.writeFile(fileName, fullXml, "utf8");
+			console.log(`✅ Finished writing ${fileName}`);
+		}
 
 		clearInterval(spinner);
-		console.log("Writing XML file...");
-		await fsp.writeFile(file, fullXml, "utf8");
-
-		console.log(`✅ Writing of ${file} finished!`);
 	} catch (err) {
 		clearInterval(spinner);
-		console.error(`❌ Error building XML: ${err.message}`);
+		console.error("❌ Error building XML:", err);
 	}
 }
