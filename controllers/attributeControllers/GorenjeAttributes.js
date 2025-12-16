@@ -82,7 +82,7 @@ class GorenjeAttributes {
             },
 			Zamrzovalniki: {
                 "type": el => ({"Tip": el["value"]}),
-                "volume_total_2017": el => ({"Prostornina": el["value"]}),
+                "volume_total_2017": el => ({"Prostornina": parseInt(el["value"], 10)}),
                 "energy_efficiency_class": el => ({"Energijski razred": el["value"]}),
                 "frostno": el => ({"No frost": "Da"}),
                                 "dim-product": el => {

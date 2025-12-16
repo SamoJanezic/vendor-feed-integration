@@ -16,7 +16,6 @@ export function formatAndUpdate(obj) {
             arr.push(`"${key}" = "${obj[key]}"`);
         }
     }
-
     return { id, arr };
 }
 

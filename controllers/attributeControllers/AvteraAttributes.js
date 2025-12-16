@@ -173,7 +173,7 @@ class AvteraAttributes {
             },
             'Pomivalni stroji': {
                 'Mere (Š x V x G)': el => AvteraAttributes.extractDimensions(el['#text']),
-                'Namestitev': el => ({ 'Tip': el['#text'] }),
+                'Namestitev': el => ({ 'Tip': el['#text'].includes('Vgradni') ? 'Vgradni' : 'Prostostoječi' }),
                 'Število pogrinjkov': el => ({ 'Število pogrinjkov': el['#text'] }),
                 'Zaščita pred izlivom vode': el => ({ 'Aqua Stop': 'Da' }),
                 'Zlaganje pribora': el => el['#text'] === 'Predal' ? { 'Tretja košara': 'Da' } : {},
@@ -191,7 +191,7 @@ class AvteraAttributes {
                 'Energetski razred': el => ({ 'Energijski razred': el['#text'] }),
                 'Samodejno odtajevanje': el => ({ 'No frost': el['#text'] }),
                 'Višina dodatno': el => ({ 'Višina': el['#text'] }),
-                'Prostornina zmrzovalnika dodatno': el => ({ 'Prostornina': el['#text'] }),
+                'Prostornina zmrzovalnika dodatno': el => ({ 'Prostornina': parseInt(el['#text'],10) }),
                 'Mere (Š x V x G)': el => AvteraAttributes.extractDimensions(el['#text']),
             },
             Pečice: {

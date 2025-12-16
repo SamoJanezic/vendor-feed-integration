@@ -172,7 +172,7 @@ export default class ElkotexController extends DobaviteljController {
 
 	extractLastnosti(desc) {
 		const html = desc.replaceAll("&scaron;", "š").replaceAll("&nbsp;", " ");
-		const clean = html.replace(/<[^>]+>/g, "\n"); // Remove HTML tags, replace with newlines
+		const clean = html.replace(/<[^>]+>/g, "\n");
 		const preprocessed = clean.replace(/([a-z0-9])([A-ZČŠŽĆĐ])/g, "$1\n$2");
 		const regex = /([A-Za-zČčŠšŽžĆćĐđč\s\/\-,\(\)0-9&;]+):\s*([^<\n]+)/g;
 
@@ -182,7 +182,7 @@ export default class ElkotexController extends DobaviteljController {
 			const key = match[1]
 				.trim()
 				.replace(/&[a-z]+;/gi, "")
-				.replaceAll("\n", ""); // Optionally clean HTML entities
+				.replaceAll("\n", "");
 			const value = match[2].trim().replaceAll("\n", "");
 			attributes[key] = value;
 		}

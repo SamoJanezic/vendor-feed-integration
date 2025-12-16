@@ -35,6 +35,57 @@ class BaseAttributes {
 	static replaceVat(text) {
         return text.replace(/\b(vatov?|wattov?|watt|vat|w)\b/gi, 'W').replace(/\s+W/, ' W').trim();
     }
+
+    static normalizeGpu(text) {
+        if (!text || typeof text !== "string") return text;
+        let str = text.toLowerCase().trim();
+
+        // Remove noise
+        str = str
+            .replace(/\(uma\)/g, "")
+            .replace(/video pomnilnik.*$/g, "")
+            .replace(/v skupni rabi.*$/g, "")
+            .replace(/integrirana|integrated|grafični|grafika|grafična|video/g, "")
+            .replace(/skupni.*$/g, "")
+            .replace(/- do.*$/g, "")
+            .replace(/\s+/g, " ") // collapse spaces
+            .trim();
+
+        // AMD Radeon — extract model numbers like 660M, 780M, 860M, 680M
+        if (str.includes("amd") || str.includes("radeon")) {
+            const model = str.match(/\b\d{3,4}m\b/i); // 660M, 780M ...
+            return model ? `AMD Radeon ${model[0].toUpperCase()}` : "AMD Radeon";
+        }
+
+        // Intel Iris Xe
+        if (str.includes("iris")) {
+            return "Intel Iris Xe";
+        }
+
+        // Intel Arc
+        if (str.includes("arc")) {
+            const model = str.match(/\b\d+[a-z]?\b/i); // 140V
+            return model ? `Intel Arc ${model[0].toUpperCase()}` : "Intel Arc";
+        }
+
+        // Intel UHD — detect numeric versions like 770
+        if (str.includes("uhd")) {
+            const num = str.match(/\b\d{3,4}\b/); // 770, 730, etc.
+            return num ? `Intel UHD ${num[0]}` : "Intel UHD";
+        }
+
+        // Intel Graphics — fallback for vague entries
+        if (str.includes("intel")) {
+            return "Intel Graphics";
+        }
+
+        // Generic "Graphics"
+        if (str === "graphics" || str === "grafika") {
+            return "Unknown GPU";
+        }
+
+        return text;
+    }
 }
 
 export default BaseAttributes;

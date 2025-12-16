@@ -49,6 +49,11 @@ class AlsoAttributes {
         return { [el['@_name']]: el['#text'] };
     }
 
+    static extractCpu(str) {
+        const match = str.match(/^(Intel Core(?: Ultra)?|AMD Ryzen) \d/);
+        return match ? match[0] : null;
+    }
+
     static extractDDR(value) {
         if (!value || typeof value !== "string") return null;
 
@@ -113,7 +118,7 @@ class AlsoAttributes {
                 'Sistem za operacijski sistem': el => ({ 'Operacijski sistem': el['#text'] }),
             },
             'All in One': {
-                Procesor: el => ({ Procesor: el['#text'] }),
+                Procesor: el => ({ Procesor: AlsoAttributes.extractCpu(el['#text']) }),
                 'Grafični krmilnik': el => ({ 'Grafična kartica': el['#text'] }),
                 Monitor: el => {
                     const res = {};

@@ -8,6 +8,12 @@ class BshAttributes {
 		return { [el["@_description"]]: el["#text"] };
 	}
 
+    static widthToCm(mm) {
+        if (mm == null) return null;
+        const cm = Number(mm) / 10;
+        return cm.toFixed(1).replace('.', ',') + ' cm';
+    }
+
 	formatAttributes() {
         if (!this.attribute || !this.attribute.length) return null;
 		const attributes = {};
@@ -57,7 +63,7 @@ class BshAttributes {
                 'DRYER_TYPE': el => ({'Samočistilni kondenzator': el['#text'] === 'Kondenzacijski' ? 'Da' : 'Ne'}),
             },
             "Pomivalni stroji": {
-                'SHORT_DESCRIPTION': el => ({'Tip': el['#text'].includes('vgradni') ? 'Vgradni' : 'Samostoječ'}),
+                'SHORT_DESCRIPTION': el => ({'Tip': el['#text'].includes('vgradni') ? 'Vgradni' : 'Prostostoječi'}),
                 'SETTINGS_2017': el => ({'Število pogrinjkov': el['#text']}),
                 'HEIGHT': el => ({'Višina': el['#text']}),
                 'LONG_DESCRIPTION': el => ({
@@ -93,7 +99,7 @@ class BshAttributes {
                 'SURFACE_BASIC_MAT': el => ({'Tip': el['#text']}),
                 'FRAME_TYPE': el => ({'Vrsta okvirja': el['#text']}),
                 'POSITIONS': el => ({'št. Kuhališč': el['#text']}),
-                'WIDTH': el => ({'Širina': el ['#text']})
+                'WIDTH': el => ({'Širina': BshAttributes.widthToCm(el['#text'])})
             },
             "Pečice": {
                 // Tip	čiščenje	Energijski razred	Prostornina	višina

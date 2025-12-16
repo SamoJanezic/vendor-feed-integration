@@ -1,6 +1,7 @@
 import { db } from "./db.js";
 import { modelsMap } from "../models/index.js";
 import "../models/associations.js";
+import { fn, col } from "sequelize";
 
 export function createTable(tableName) {
 	tableName
@@ -77,28 +78,70 @@ export function updateItem(tableName, id, pairs) {
 		});
 }
 
-export async function getIzdelekInfo() {
-	return await db.query(
-		`SELECT MIN(izdelek_ean) AS	ean,
-			id,
-			izdelek_ime,
-			izdelek_opis,
-			ppc,
-			nabavna_cena,
-			dealer_cena,
-			blagovna_znamka,
-			davcna_stopnja,
-			KATEGORIJA.kategorija_id,
-			KATEGORIJA.kategorija,
-			zaloga
-		FROM IZDELEK
-			INNER JOIN
-			IZDELEK_DOBAVITELJ ON IZDELEK.ean = IZDELEK_DOBAVITELJ.izdelek_ean
-			INNER JOIN
-			KATEGORIJA ON IZDELEK_DOBAVITELJ.KATEGORIJA_kategorija = KATEGORIJA.kategorija
-			WHERE aktiven = 1
-			GROUP BY ean`
-	);
+// export async function getIzdelekInfo() {
+// 	return await db.query(
+// 		`SELECT MIN(izdelek_ean) AS	ean,
+// 			id,
+// 			izdelek_ime,
+// 			izdelek_opis,
+// 			ppc,
+// 			nabavna_cena,
+// 			dealer_cena,
+// 			blagovna_znamka,
+// 			davcna_stopnja,
+// 			KATEGORIJA.kategorija_id,
+// 			KATEGORIJA.kategorija,
+// 			zaloga
+// 		FROM IZDELEK
+// 			INNER JOIN
+// 			IZDELEK_DOBAVITELJ ON IZDELEK.ean = IZDELEK_DOBAVITELJ.izdelek_ean
+// 			INNER JOIN
+// 			KATEGORIJA ON IZDELEK_DOBAVITELJ.KATEGORIJA_kategorija = KATEGORIJA.kategorija
+// 			WHERE aktiven = 1
+// 			GROUP BY ean`
+// 	);
+// }
+
+export async function getIzdelekInfo(categoryArr) {
+  return await modelsMap.IzdelekDobavitelj.findAll({
+    attributes: [
+      [fn("MIN", col("IzdelekDobavitelj.izdelek_ean")), "ean"],
+
+      "izdelek_ime",
+      "izdelek_opis",
+    //   "izdelek_kratki_opis",
+      "ppc",
+      "nabavna_cena",
+      "dealer_cena",
+      "zaloga",
+
+      [col("Izdelek.davcna_stopnja"), "davcna_stopnja"],
+      [col("Izdelek.blagovna_znamka"), "blagovna_znamka"],
+
+      [col("Kategorija.kategorija_id"), "kategorija_id"],
+      [col("Kategorija.kategorija"), "kategorija"]
+    ],
+    include: [
+        {
+            model: modelsMap.Izdelek,
+            as: "izdelek",
+            attributes: []
+        },
+        {
+            model: modelsMap.Kategorija,
+            attributes: []
+        }
+    ],
+    where: { aktiven: 1, KATEGORIJA_kategorija: categoryArr},
+    group: [
+      "IzdelekDobavitelj.izdelek_ean",
+      "Izdelek.davcna_stopnja",
+      "Izdelek.blagovna_znamka",
+      "Kategorija.kategorija_id",
+      "Kategorija.kategorija"
+    ],
+    raw: true
+  });
 }
 
 export async function getAtributInfo(ean) {

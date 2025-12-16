@@ -153,7 +153,7 @@ export default class DobaviteljController {
 		if (lookup["Proizvajalec"]) {
 			filtri.push({
 				izdelek_ean: data.ean,
-				filter_id: lookup["Proizvajalec"],
+				filter_id: lookup["Proizvajalec" || ""].toUpperCase(),
 				filter_vrednost: data.blagovna_znamka,
 			});
 		}
@@ -187,11 +187,11 @@ export default class DobaviteljController {
 		}
 
         // console.log(filtri)
-        filtri.forEach(el => {
-            if(!el.filter_id) {
-                console.log(el, data.kategorija)
-            }
-        })
+        // filtri.forEach(el => {
+        //     if(!el.filter_id) {
+        //         console.log(el, data.kategorija)
+        //     }
+        // })
 
         // console.log(lastnosti)
         // console.log("attrs from Attributes.formatAttributes:", { filterData, attributes });
@@ -317,7 +317,8 @@ export default class DobaviteljController {
 
 	async insertDataIntoDb() {
 		const { izdelekData, izdelekDobaviteljData } = this.prepareDbData();
-
+        // console.log(this.atribut)
+        // process.exit()
 		db.sync();
 		await insertIntoTable(modelsMap.Dobavitelj, { dobavitelj: this.name });
 		await insertIntoTable(modelsMap.Izdelek, izdelekData);
