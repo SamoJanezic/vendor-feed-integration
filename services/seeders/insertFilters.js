@@ -1,4 +1,4 @@
-import { Filter } from "../Models/Filter.js";
+import { Filter } from "../../Models/Filter.js";
 import crypto from 'crypto';
 
 export const filtri = {

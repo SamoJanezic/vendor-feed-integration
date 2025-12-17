@@ -31,4 +31,4 @@ export async function executeAll() {
 }
 
 // Entry point
-executeAll().catch(err => console.error('Fatal error executing controllers:', err));
+// executeAll().catch(err => console.error("Fatal error executing controllers:", err));

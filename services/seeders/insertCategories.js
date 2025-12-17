@@ -1,4 +1,4 @@
-import { Kategorija } from "../Models/Kategorija.js";
+import { Kategorija } from "../../Models/Kategorija.js";
 
 const categories = [
 	{

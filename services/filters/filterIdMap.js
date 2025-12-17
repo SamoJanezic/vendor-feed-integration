@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { filtri } from "../../seeders/insertFilters.js"; // adjust path to your file
+import { filtri } from "../seeders/insertFilters.js"; // adjust path to your file
 
 // Generate deterministic filter ID
 function createDeterministicId(categoryId, naziv) {

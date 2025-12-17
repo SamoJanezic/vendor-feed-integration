@@ -1,4 +1,4 @@
-import { downloadAll } from "../../xml-downloader/app.js";
+import { downloadAll } from "../xml-downloader/app.js";
 import { executeAll } from "../../app.js";
 import { build } from "../builder/buildXml.js";
 // const express = require('express')
@@ -23,4 +23,4 @@ app.listen(port, () => {
 	console.log("Server is running on port 3000");
 });
 
-cron.schedule("5 8 * * 1-5", dataProcessor);
+cron.schedule("0 6 * * 1-5", dataProcessor); //"mm hh danVMescu MM danVTednu"
