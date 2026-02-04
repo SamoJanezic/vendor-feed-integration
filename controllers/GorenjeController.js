@@ -43,14 +43,14 @@ export default class GorenjeController extends DobaviteljController {
 		"Lahko čistilni vložki",
 		"Nosilec pekača",
 		"Čistilnik zraka",
-		"_product/type/kitchen-hood-recirculate",
+		"_product/type/kitchen-hood-recirculat e",
 		"Aparat za točenje piva",
 	]);
 
 	exceptions(param) {
-		if (this.ignoreCategorySet.has(param)) {
-			return true;
-		}
+        if (this.ignoreCategorySet.has(param)) {
+            return true;
+        }
 	}
 
 	createDataObject() {
