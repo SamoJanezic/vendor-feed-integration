@@ -4,3 +4,5 @@ db/sqlite/
 xml
 nodes
 vsa_gesla.csv
+.vscode/
+services/xml-downloader/
