@@ -1,6 +1,6 @@
 import { db } from "./db.js";
-import { modelsMap } from "../models/index.js";
-import "../models/associations.js";
+import { modelsMap } from "../Models/index.js";
+import "../Models/associations.js";
 import { fn, col } from "sequelize";
 
 export function createTable(tableName) {

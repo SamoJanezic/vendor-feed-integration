@@ -1,6 +1,6 @@
 {
 	"author": "Samo Janežič",
-    "license": "Softtrade d.o.o.",
+	"license": "Softtrade d.o.o.",
 	"dependencies": {
 		"@sequelize/mssql": "^7.0.0-alpha.46",
 		"allow-cors": "^2.0.0",
@@ -12,7 +12,7 @@
 		"node-cron": "^4.2.1",
 		"read-excel-file": "^6.0.1",
 		"sequelize": "^6.37.5",
-		"sqlite3": "^5.1.7",
+		"sqlite3": "^6.0.1",
 		"tedious": "^19.0.0",
 		"windows-1250": "^3.0.4"
 	},
@@ -24,7 +24,7 @@
 		"update": "node scripts/update.js",
 		"seed": "node scripts/seed.js",
 		"cron": "node services/cron/startAll.js",
-        "serve": "node server.js"
+		"serve": "node server.js"
 	},
 	"devDependencies": {
 		"eslint": "^9.39.1"

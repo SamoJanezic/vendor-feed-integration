@@ -1,9 +1,9 @@
 import { db } from "../db/db.js";
 import { xmlParser } from "./parseController.js";
 import { insertIntoTable } from "../db/sql.js";
-import { modelsMap } from "../models/index.js";
+import { modelsMap } from "../Models/index.js";
 import { categoryLookup, filterLookup } from "../services/filters/filterIdMap.js";
-import "../models/associations.js";
+import "../Models/associations.js";
 
 export default class DobaviteljController {
 	vrstice = [
