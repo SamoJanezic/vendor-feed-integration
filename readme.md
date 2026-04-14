@@ -62,6 +62,15 @@ Key relationships:
 - Express
 - Cron jobs
 
+
+# This project requires environment variables for vendor integrations.
+
+Example:
+
+VENDOR_URL=https://example.com/vendor-feed.xml
+
+Real vendor endpoints are not included for security reasons.
+
 # Setup
 
 bash
