@@ -1,4 +1,4 @@
-import dobaviteljController from "./DobaviteljController.js";
+import dobaviteljController from "./DobaviteljController.ts";
 import { excelParser } from "./parseController.js";
 
 export default class LiebherrController extends dobaviteljController {

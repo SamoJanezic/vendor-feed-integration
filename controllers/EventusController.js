@@ -1,4 +1,4 @@
-import DobaviteljController from "./DobaviteljController.js";
+import DobaviteljController from "./DobaviteljController.ts";
 
 export default class EventusController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {

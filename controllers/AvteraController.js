@@ -1,4 +1,4 @@
-import DobaviteljController from "./DobaviteljController.js";
+import DobaviteljController from "./DobaviteljController.ts";
 
 export default class AvteraController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {

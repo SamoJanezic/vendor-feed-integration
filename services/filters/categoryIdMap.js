@@ -13,4 +13,5 @@ async function buildCategoryLookup() {
     return lookup;
 }
 
+/** @type {Record<string, string>} */
 export const categoryLookup = await buildCategoryLookup();

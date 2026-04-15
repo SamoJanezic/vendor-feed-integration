@@ -1,10 +1,10 @@
 Ko se dela novi kontroler ga je treba dodati v "controllers\index.js"
 Prav tako je treba dodati še categoryMap v mapo controllers\categoryMaps in jo tudi vnesti pod controllers\categoryMaps\index.js. In dodamo še attributeController pod "controller\attributControllers" in ga vnesemo controllers\categoryMaps\index.js.
-Glaven kontroler je dobaviteljController.js drugi so potem vsi child-i ki njega extendajo. Tako vsi podedujejo funckije in lastnosti glavnega.
+Glaven kontroler je DobaviteljController.ts drugi so potem vsi child-i ki njega extendajo. Tako vsi podedujejo funckije in lastnosti glavnega.
 Primer: Naredil bi rad nov kontroler ApiController.js, ki ga narediš znotraj /controllers in v index.js ga importaš in definiraš, v /categoryMaps se naredi apiCategory.js in se tudi mora importirati in definirati v categoryMaps/index.js. nato se še ustvari ApiAttributes.js znotraj attributeControllers in se importa in definira tam.
 
 izgled apiController.js:
-import DobaviteljController from "./DobaviteljController.js";
+import DobaviteljController from "./DobaviteljController.ts";
 export default class ApiController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {
 		super(...args);

@@ -5,7 +5,14 @@ import { modelsMap } from "../Models/index.js";
 import { categoryLookup, filterLookup } from "../services/filters/filterIdMap.js";
 import "../Models/associations.js";
 
-export default class DobaviteljController {
+
+
+export default abstract class DobaviteljController {
+	file: any;
+	nodes: any;
+	encoding?: string;
+	keys!: string[];
+
 	vrstice = [
 		"ean",
 		"izdelek_ime",
@@ -24,13 +31,29 @@ export default class DobaviteljController {
 		"eprel_id",
 		"zaloga",
 	];
-	allData = [];
+	allData: Record<string, any>[] = [];
 	komponenta = null;
 	atribut = null;
 	slika = null;
 	filtri = null;
 
-	escapeXml(str) {
+	abstract name: string;
+
+	abstract categoryMap: Record<string, string[]>;
+
+	abstract Attributes: any;
+
+	abstract combineData(): any;
+
+	abstract exceptions(product: any): boolean;
+
+	abstract getEprel(value: string): string;
+
+	abstract formatZaloga(value: string): number;
+
+	abstract parseObject(value: any): any;
+
+	escapeXml(str: string) {
 		return str
 			.replace(/&/g, "&amp;")
 			.replace(/</g, "&lt;")
@@ -41,7 +64,7 @@ export default class DobaviteljController {
 
 	getData() {
 		if (typeof this.file === "object") {
-			return this.file.map((el) => {
+			return this.file.map((el: { fileName: string; node: string }) => {
 				if (!el?.fileName || !el?.node) {
 					console.warn("Skipping invalid file entry:", el);
 					return null;
@@ -52,7 +75,7 @@ export default class DobaviteljController {
 		try {
 			const data = xmlParser(this.file, this.nodes, this.encoding);
 			return data;
-		} catch (err) {
+		} catch (err: any) {
 			console.error("Error parsing XML file:", err.message);
 			return null;
 		}
@@ -66,21 +89,21 @@ export default class DobaviteljController {
 			getData = this.combineData();
 		}
 
-		getData.forEach((product) => {
-			let newObj = {};
+		getData.forEach((product: any) => {
+			let newObj: Record<string, any> = {};
 
 			if (this.exceptions(product)) {
 				return;
 			}
 
-			this.keys.forEach((key, idx) =>
+			this.keys.forEach((key: string, idx: number) =>
 				this.keyRules(newObj, product, key, idx, vrstica)
 			);
 			this.allData.push(newObj);
 		});
 	}
 
-	keyRules(obj, product, key, idx, vrstica) {
+	keyRules(obj: any, product: any, key: string, idx: number, vrstica: string[]) {
 		if (vrstica[idx] === "eprel_id") {
 			if (typeof this.getEprel === "function") {
 				obj[vrstica[idx]] = this.getEprel(product[key]);
@@ -92,18 +115,18 @@ export default class DobaviteljController {
 			product[key] === "" ||
 			!product[key]
 		) {
-			obj[vrstica[idx]] = null;
+			obj[vrstica[idx]!] = null;
 		} else if (typeof product[key] === "object") {
-			obj[vrstica[idx]] = this.parseObject(product[key]);
+			obj[vrstica[idx]!] = this.parseObject(product[key]);
 		} else {
-			obj[vrstica[idx]] = product[key];
+			obj[vrstica[idx]!] = product[key];
 		}
 		return obj;
 	}
 
-	flattenCategoryMap(categoryMap) {
+	flattenCategoryMap(categoryMap: Record<string, string[]>): Record<string, string> {
 		if (!categoryMap) return {};
-		return Object.entries(categoryMap).reduce(
+		return Object.entries(categoryMap).reduce<Record<string,string>>(
 			(acc, [newCategory, oldCategories]) => {
 				oldCategories.forEach((old) => (acc[old] = newCategory));
 				return acc;
@@ -112,39 +135,28 @@ export default class DobaviteljController {
 		);
 	}
 
-	processCategory(data, flatCategoryMap) {
+	processCategory(data: Record<string, any>, flatCategoryMap: Record<string, string>) {
 		let kategorija = data.kategorija;
 		let dodatne_lastnosti = data.dodatne_lastnosti
 			? JSON.parse(JSON.stringify(data.dodatne_lastnosti))
 			: [];
 
 		const newCat = flatCategoryMap[kategorija];
+
 		if (newCat) {
-			if (
-                this.name === "asbis" &&
-                newCat === "Usmerjevalniki, stikala in AP" &&
-                this.routerTypes &&
-                this.routerTypes[kategorija] &&
-                Array.isArray(dodatne_lastnosti)
-            ) {
-                dodatne_lastnosti.push({
-                    "@_Name": "Vrsta",
-                    "@_Value": this.routerTypes[kategorija],
-                });
-            }
 			kategorija = newCat;
 		}
 
 		return { ...data, kategorija, dodatne_lastnosti };
 	}
 
-	processLastnosti(data) {
+	processLastnosti(data: any) {
 		const catId = categoryLookup[data.kategorija];
 		if (!catId) {
-			console.warn(" category:", data.kategorija);
+			console.warn("Missing category:", data.kategorija);
 		}
 
-		const lookup = filterLookup[catId] || {};
+		const lookup = filterLookup[catId!] || {};
 
 
 		let filtri = [];
@@ -153,7 +165,7 @@ export default class DobaviteljController {
 		if (lookup["Proizvajalec"]) {
 			filtri.push({
 				izdelek_ean: data.ean,
-				filter_id: lookup["Proizvajalec" || ""].toUpperCase(),
+				filter_id: lookup["Proizvajalec"]?.toUpperCase() ?? null,
 				filter_vrednost: data.blagovna_znamka,
 			});
 		}
@@ -200,7 +212,7 @@ export default class DobaviteljController {
 		return {lastnosti, filtri};
 	}
 
-	mapKomponentaAndAtribut(lastnosti) {
+	mapKomponentaAndAtribut(lastnosti: any) {
 		const komponenta = [];
 		const atribut = [];
 		for (const el of lastnosti) {
@@ -220,7 +232,7 @@ export default class DobaviteljController {
 		return { komponenta, atribut };
 	}
 
-	processImages(data) {
+	processImages(data: any) {
 		const slike = [
 			data.slika_mala ?? {
 				izdelek_ean: data.ean,
@@ -240,7 +252,7 @@ export default class DobaviteljController {
 				: data.dodatne_slike;
 
 			slike.push(
-				...dodatneSlike.map((el) => ({
+				...dodatneSlike.map((el: any) => ({
 					izdelek_ean: data.ean,
 					slika_url: el,
 					tip: "dodatna",

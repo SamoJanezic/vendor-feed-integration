@@ -10,7 +10,7 @@ function createDeterministicId(categoryId, naziv) {
         .slice(0, 12);
 }
 
-// Build lookup tables
+/** @type {Record<string, Record<string, string>>} */
 export const categoryLookup = {};
 export const filterLookup = {};
 

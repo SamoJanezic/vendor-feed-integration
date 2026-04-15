@@ -1,5 +1,5 @@
 import { xmlParser } from "./parseController.js";
-import DobaviteljController from "./DobaviteljController.js";
+import DobaviteljController from "./DobaviteljController.ts";
 
 
 export default class GorenjeController extends DobaviteljController {
