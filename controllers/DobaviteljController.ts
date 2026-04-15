@@ -2,7 +2,7 @@ import { db } from "../db/db.js";
 import { xmlParser } from "./parseController.js";
 import { insertIntoTable } from "../db/sql.js";
 import { modelsMap } from "../Models/index.js";
-import { categoryLookup, filterLookup } from "../services/filters/filterIdMap.js";
+import { categoryLookup, filterLookup } from "../services/filters/filterIdMap.ts";
 import "../Models/associations.js";
 
 

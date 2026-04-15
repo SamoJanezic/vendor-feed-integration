@@ -3,7 +3,7 @@ import DobaviteljController from "./DobaviteljController.ts";
 import {
 	categoryLookup,
 	filterLookup,
-} from "../services/filters/filterIdMap.js";
+} from "../services/filters/filterIdMap.ts";
 
 export default class BshController extends DobaviteljController {
 	constructor(categoryMap, Attributes, ...args) {

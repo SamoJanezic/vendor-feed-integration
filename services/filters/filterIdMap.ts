@@ -1,8 +1,13 @@
 import crypto from "crypto";
 import { filtri } from "../seeders/insertFilters.js"; // adjust path to your file
 
+type CategoryCall = {
+    CategoryId: string;
+    naziv: string;
+}
+
 // Generate deterministic filter ID
-function createDeterministicId(categoryId, naziv) {
+function createDeterministicId(categoryId: number, naziv: string): string {
     return crypto
         .createHash("md5")
         .update(`${categoryId}:${naziv}`)
@@ -10,9 +15,8 @@ function createDeterministicId(categoryId, naziv) {
         .slice(0, 12);
 }
 
-/** @type {Record<string, Record<string, string>>} */
-export const categoryLookup = {};
-export const filterLookup = {};
+export const categoryLookup: Record<string, number> = {};
+export const filterLookup: Record<number, Record<string, string>> = {};
 
 for (const [categoryName, data] of Object.entries(filtri)) {
     const kategorija_id = Number(data.id);
